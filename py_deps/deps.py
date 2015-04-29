@@ -76,24 +76,27 @@ class Package(object):
     def _parse_egg_info(egg_info):
         """Parse ``.egg-info`` directory.
 
-        :rtype: `pkg_resouces.Distribution`
-        :return: metadata of egg-info
+        :rtype: dict
+        :return: dictionary of requires
 
         :param str egg_info: ``.egg-info`` directory path
         """
         base_dir = os.path.dirname(egg_info)
         metadata = PathMetadata(base_dir, egg_info)
         dist_name = os.path.splitext(os.path.basename(egg_info))[0]
-        return Distribution(base_dir,
-                            project_name=dist_name,
-                            metadata=metadata)
+        dist_obj = Distribution(base_dir,
+                                project_name=dist_name,
+                                metadata=metadata)
+        return dict(name=dist_obj.project_name,
+                    version=dist_obj.version,
+                    requires=dist_obj.requires())
 
     @staticmethod
     def _parse_dist_info(dist_info):
         """Parse ``.dist-info`` directory.
 
         :rtype: dict
-        :return: metadata of dist-info
+        :return: dictionary of requires and test_requires
 
         :param str dist_info: ``.dist-info`` directory path.
         """
@@ -103,7 +106,10 @@ class Package(object):
         if metadata.get('run_requires') is None:
             # To Do: parsing requirements.txt later.
             pass
-        return metadata
+        return dict(name=metadata.get('name'),
+                    version=metadata.get('version'),
+                    requires=metadata.get('run_requires'),
+                    test_requires=metadata.get('test_requires'))
 
     def cleanup(self):
         """Cleanup temporary build directory."""
