@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""py_deps.scan module."""
+"""py_deps.deps module."""
 import os
 import tempfile
 import re
