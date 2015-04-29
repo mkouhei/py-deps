@@ -66,9 +66,15 @@ long_description = (
 requires = ['setuptools',
             'pip',
             'wheel']
+extras_require = {
+    'reST': ['Sphinx'],
+    }
 
 with open('requirements.txt', 'w') as _file:
     _file.write('\n'.join(requires))
+
+with open('extras_requirement.txt', 'w') as _file:
+    _file.write('\n'.join(extras_require.get('reST')))
 
 setup(name='py-deps',
       version='0.0.1',
@@ -83,5 +89,6 @@ setup(name='py-deps',
       data_files=[],
       install_requires=requires,
       include_package_data=True,
+      extras_require=extras_require,
       tests_require=['tox'],
       cmdclass={'test': Tox},)
