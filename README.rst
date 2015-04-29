@@ -7,6 +7,19 @@ and generating the metadata for graph.
 
 The graph data is for `Graphviz <http://www.graphviz.org/>`_, `blockdiag <http://blockdiag.com/>`_, `Linkdraw <https://github.com/mtoshi/linkdraw/wiki>`_, etc.
 
+Status
+======
+
+.. image:: https://secure.travis-ci.org/mkouhei/py-deps.png?branch=master
+   :target: http://travis-ci.org/mkouhei/py-deps
+.. image:: https://coveralls.io/repos/mkouhei/py-deps/badge.png?branch=master
+   :target: https://coveralls.io/r/mkouhei/py-deps?branch=master
+.. image:: https://pypip.in/v/py-deps/badge.png
+   :target: https://crate.io/packages/py-deps
+.. image:: https://readthedocs.org/projects/py-deps/badge/?version=latest
+   :target: https://readthedocs.org/projects/py-deps/?badge=latest
+   :alt: Documentation Status
+
 Requirements
 ============
 
