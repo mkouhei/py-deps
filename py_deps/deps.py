@@ -22,9 +22,9 @@ class Package(object):
     #: index_url
     index_url = 'https://pypi.python.org/simple'
 
-    def __init__(self, pkg_name):
+    def __init__(self, name):
         """Initialize to parsing dependencies of package."""
-        self.pkg_name = pkg_name
+        self.name = name
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
         self.finder = PackageFinder(find_links=[],
@@ -34,7 +34,7 @@ class Package(object):
                                      download_dir=None,
                                      upgrade=True)
 
-        req = InstallRequirement.from_line(pkg_name,
+        req = InstallRequirement.from_line(name,
                                            comes_from=None)
         self.reqset.add_requirement(req)
         self.requires = []
