@@ -87,9 +87,7 @@ class Package(object):
         dist_obj = Distribution(base_dir,
                                 project_name=dist_name,
                                 metadata=metadata)
-        return dict(name=dist_obj.project_name,
-                    version=dist_obj.version,
-                    requires=dist_obj.requires())
+        return _dist_to_node(dist_obj)
 
     @staticmethod
     def _parse_dist_info(dist_info):
@@ -106,11 +104,84 @@ class Package(object):
         if metadata.get('run_requires') is None:
             # To Do: parsing requirements.txt later.
             pass
-        return dict(name=metadata.get('name'),
-                    version=metadata.get('version'),
-                    requires=metadata.get('run_requires'),
-                    test_requires=metadata.get('test_requires'))
+        return _wheel_to_node(metadata)
 
     def cleanup(self):
         """Cleanup temporary build directory."""
         pip.util.rmtree(self.tempdir, ignore_errors=True)
+
+
+def _dist_to_node(dist_obj):
+    """Convert distribution metadata to Node objects."""
+    node = Node(dist_obj.project_name, version=dist_obj.version)
+    node.add_targets([Target(req.project_name, req.specs)
+                      for req in dist_obj.requires()])
+    return node
+
+
+def _wheel_to_node(metadata):
+    """Convert wheel metadata to Node objects."""
+    node = Node(metadata.get('name'),
+                version=metadata.get('version'))
+    if metadata.get('run_requires'):
+        for requires in metadata.get('run_requires'):
+            node.add_targets(_parse_require(requires.get('requires')))
+    if metadata.get('test_requires'):
+        for requires in metadata.get('test_requires'):
+            node.add_targets(
+                _parse_require(requires.get('requires'), extras=True))
+    return node
+
+
+def _parse_require(requires, extras=False):
+    """parse require metadata."""
+    targets = []
+    for req in requires:
+        if len(req.split()) == 1:
+            targets.append(Target(req, None, extras))
+        else:
+            targets.append(Target(req.split()[0], req.split()[1], extras))
+    return targets
+
+
+class Node(object):
+
+    """Node object class."""
+
+    def __init__(self, name, version=None, url=None):
+        """Initialize."""
+        self.name = name
+        self.version = version
+        self.url = url
+        self.targets = []
+        self.test_targets = []
+
+    def __repr__(self):
+        """Return dictionary of Node object items."""
+        return str(self.name)
+
+    def add_targets(self, nodes):
+        """Add targets."""
+        self.targets += nodes
+
+    def remove_targets(self, *nodes):
+        """Remove targets."""
+        for node in nodes:
+            del self.targets[self.targets.index(node)]
+
+    def add_test_targets(self, nodes):
+        """Add test targets."""
+        self.test_targets += nodes
+
+
+class Target(Node):
+
+    """Target objects."""
+
+    def __init__(self, nodename, specs, extras=False):
+        """Initialize."""
+        super(Target, self).__init__(nodename)
+        #: specs
+        self.specs = specs
+        #: extras: True is extras when test_requries (False in default)
+        self.extras = extras
