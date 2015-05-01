@@ -166,7 +166,7 @@ class Node(object):
         self.test_targets = []
 
     def __repr__(self):
-        """Return dictionary of Node object items."""
+        """Return Node object name."""
         return str(self.name)
 
     def add_targets(self, nodes):
