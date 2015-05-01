@@ -34,8 +34,13 @@ class Package(object):
         req = InstallRequirement.from_line(pkg_name,
                                            comes_from=None)
         self.reqset.add_requirement(req)
+        self.requires = []
 
-    def download(self):
+    def cleanup(self):
+        """Cleanup temporary build directory."""
+        pip.util.rmtree(self.tempdir, ignore_errors=True)
+
+    def _download(self):
         """Download packages to build_dir.
 
         This method does not download requires recursively.
@@ -48,11 +53,19 @@ class Package(object):
         :rtype: list
         :return: requires object or dict object
         """
-        return [self.parse(os.path.join(self.tempdir, d))
-                for d in os.listdir(self.tempdir)
-                if os.path.isdir(os.path.join(self.tempdir, d))]
+        if not self.requires:
+            self._download()
+            self._collect_requires()
+            self.cleanup()
+        return self.requires
 
-    def parse(self, pkg_dir):
+    def _collect_requires(self):
+        """Collect requires object or dict object."""
+        self.requires = [self._parse(os.path.join(self.tempdir, d))
+                         for d in os.listdir(self.tempdir)
+                         if os.path.isdir(os.path.join(self.tempdir, d))]
+
+    def _parse(self, pkg_dir):
         """Parsing package metadata.
 
         :rtype: `pkg_resouces.Distributions` or list
@@ -105,10 +118,6 @@ class Package(object):
             # To Do: parsing requirements.txt later.
             pass
         return _wheel_to_node(metadata)
-
-    def cleanup(self):
-        """Cleanup temporary build directory."""
-        pip.util.rmtree(self.tempdir, ignore_errors=True)
 
 
 def _dist_to_node(dist_obj):
