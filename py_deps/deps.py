@@ -3,13 +3,16 @@
 import os
 import tempfile
 import re
-import glob
 import pip.util
 import wheel.util
+from glob import glob
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
+
+
+SUFFIX = '-py_deps'
 
 
 class Package(object):
@@ -22,7 +25,7 @@ class Package(object):
     def __init__(self, pkg_name):
         """Initialize to parsing dependencies of package."""
         self.pkg_name = pkg_name
-        self.tempdir = tempfile.mkdtemp()
+        self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
         self.finder = PackageFinder(find_links=[],
                                     index_urls=[self.index_url])
@@ -36,9 +39,19 @@ class Package(object):
         self.reqset.add_requirement(req)
         self.requires = []
 
-    def cleanup(self):
-        """Cleanup temporary build directory."""
-        pip.util.rmtree(self.tempdir, ignore_errors=True)
+    def cleanup(self, alldir=False):
+        """Cleanup temporary build directory.
+
+        :param bool alldir: Remove all temporary directories. (default: False)
+
+        :rtype: None
+        """
+        if alldir:
+            for tempdir in glob("%s/tmp*%s" % (os.path.dirname(self.tempdir),
+                                               SUFFIX)):
+                pip.util.rmtree(tempdir, ignore_errors=True)
+        else:
+            pip.util.rmtree(self.tempdir, ignore_errors=True)
 
     def _download(self):
         """Download packages to build_dir.
@@ -77,8 +90,8 @@ class Package(object):
                     if pat.search(f)]
 
         if 'pip-egg-info' in egg_dirs:
-            egg_info = glob.glob('%s/*' % os.path.join(pkg_dir,
-                                                       'pip-egg-info'))[0]
+            egg_info = glob('%s/*' % os.path.join(pkg_dir,
+                                                  'pip-egg-info'))[0]
             metadata = self._parse_egg_info(egg_info)
         else:
             dist_info = os.path.join(pkg_dir, egg_dirs[0])
