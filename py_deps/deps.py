@@ -61,7 +61,7 @@ class Package(object):
         """
         self.reqset.prepare_files(self.finder)
 
-    def list_requires(self):
+    def _list_requires(self):
         """Listing requires object or dict object.
 
         :rtype: list
@@ -74,10 +74,13 @@ class Package(object):
         return self.requires
 
     def trace_chain(self, pkg_name=None):
-        """Trace dependency chain."""
+        """Trace dependency chain.
+
+        :param str pkg_name: package name
+        """
         if pkg_name is None:
             pkg_name = self.name
-        pkg = [req for req in self.list_requires()
+        pkg = [req for req in self._list_requires()
                if req.name == pkg_name]
         if len(pkg) == 0:
             return
