@@ -38,6 +38,7 @@ class Package(object):
                                            comes_from=None)
         self.reqset.add_requirement(req)
         self.requires = []
+        self.traced_chain = []
 
     def cleanup(self, alldir=False):
         """Cleanup temporary build directory.
@@ -71,6 +72,20 @@ class Package(object):
             self._collect_requires()
             self.cleanup()
         return self.requires
+
+    def trace_chain(self, pkg_name=None):
+        """Trace dependency chain."""
+        if pkg_name is None:
+            pkg_name = self.name
+        pkg = [req for req in self.list_requires()
+               if req.name == pkg_name]
+        if len(pkg) == 0:
+            return
+        if pkg[0] not in self.traced_chain:
+            self.traced_chain.append(pkg[0])
+        if len(pkg[0].targets) > 0:
+            for target in pkg[0].targets:
+                self.trace_chain(target.name)
 
     def _collect_requires(self):
         """Collect requires object or dict object."""
