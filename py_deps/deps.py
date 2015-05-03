@@ -32,7 +32,8 @@ class Package(object):
         self.reqset = RequirementSet(build_dir=self.tempdir,
                                      src_dir=src_prefix,
                                      download_dir=None,
-                                     upgrade=True)
+                                     upgrade=True,
+                                     ignore_installed=True)
 
         req = InstallRequirement.from_line(name,
                                            comes_from=None)
