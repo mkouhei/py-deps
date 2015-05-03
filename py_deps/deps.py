@@ -151,6 +151,30 @@ class Package(object):
             pass
         return _wheel_to_node(metadata)
 
+    @staticmethod
+    def dot():
+        """Generate graphviz dot data.
+
+        Not implemented.
+        """
+        pass
+
+    @staticmethod
+    def blockdiag():
+        """Generate blockdiag data.
+
+        Not implemented.
+        """
+        pass
+
+    @staticmethod
+    def linkdraw():
+        """Generate Linkdraw data.
+
+        Not implemented.
+        """
+        pass
+
 
 def _dist_to_node(dist_obj):
     """Convert distribution metadata to Node objects."""
