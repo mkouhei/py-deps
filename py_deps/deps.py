@@ -104,6 +104,7 @@ class Package(object):
 
         :rtype: `pkg_resouces.Distributions` or list
         :return: package metadata
+
         :param str pkg_dir: package directory in build_dir.
         """
         pat = re.compile(r'(\A(.*\.(egg|dist)-info|pip-egg-info)\Z)')
