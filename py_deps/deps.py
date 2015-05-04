@@ -10,6 +10,7 @@ from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
+from py_deps import graph
 
 
 SUFFIX = '-py_deps'
@@ -152,29 +153,12 @@ class Package(object):
             pass
         return _wheel_to_node(metadata)
 
-    @staticmethod
-    def dot():
-        """Generate graphviz dot data.
+    def draw(self, draw_type=None):
+        """Generate drawing data.
 
-        Not implemented.
+        :param str draw_type: [dot|blockdiag|linkdraw]
         """
-        pass
-
-    @staticmethod
-    def blockdiag():
-        """Generate blockdiag data.
-
-        Not implemented.
-        """
-        pass
-
-    @staticmethod
-    def linkdraw():
-        """Generate Linkdraw data.
-
-        Not implemented.
-        """
-        pass
+        graph.router(self.traced_chain, draw_type=draw_type)
 
 
 def _dist_to_node(dist_obj):
