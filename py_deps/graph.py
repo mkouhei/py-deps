@@ -12,7 +12,7 @@ def router(chain_data, draw_type=None):
         pass
     elif draw_type == 'linkdraw':
         linkdraw = Linkdraw(chain_data)
-        print(linkdraw.generate_data())
+        return linkdraw.generate_data()
     else:
         pretty_print(chain_data)
 
