@@ -14,7 +14,7 @@ def router(chain_data, draw_type=None):
         linkdraw = Linkdraw(chain_data)
         return linkdraw.generate_data()
     else:
-        pretty_print(chain_data)
+        return pretty_print(chain_data)
 
 
 def pretty_print(chain_data):
@@ -22,8 +22,10 @@ def pretty_print(chain_data):
 
     :param list chain_data: List of `deps.Node`
     """
+    lines = ''
     for node in chain_data:
-        print('%s -> %s' % (node, node.targets))
+        lines += '%s -> %s\n' % (node, node.targets)
+    return lines.rstrip()
 
 
 class Linkdraw(object):

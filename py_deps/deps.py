@@ -159,7 +159,7 @@ class Package(object):
 
         :param str draw_type: [dot|blockdiag|linkdraw]
         """
-        graph.router(self.traced_chain, draw_type=draw_type)
+        return graph.router(self.traced_chain, draw_type=draw_type)
 
 
 def _dist_to_node(dist_obj):
