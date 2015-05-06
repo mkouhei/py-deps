@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os.path
+import os
 import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
@@ -69,6 +69,8 @@ requires = ['setuptools',
 extras_require = {
     'reST': ['Sphinx'],
     }
+if os.environ.get('READTHEDOCS', None):
+    extras_require['reST'].append('recommonmark')
 
 with open('requirements.txt', 'w') as _file:
     _file.write('\n'.join(requires))
