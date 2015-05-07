@@ -8,6 +8,7 @@ import wheel.util
 from glob import glob
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
+from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 from py_deps import graph
@@ -33,12 +34,14 @@ class Package(object):
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
         self.finder = PackageFinder(find_links=[],
-                                    index_urls=[self.index_url])
+                                    index_urls=[self.index_url],
+                                    session=PipSession())
         self.reqset = RequirementSet(build_dir=self.tempdir,
                                      src_dir=src_prefix,
                                      download_dir=None,
                                      upgrade=True,
-                                     ignore_installed=True)
+                                     ignore_installed=True,
+                                     session=PipSession())
 
         req = InstallRequirement.from_line(name,
                                            comes_from=None)
