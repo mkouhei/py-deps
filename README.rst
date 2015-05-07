@@ -24,6 +24,11 @@ Requirements
 ============
 
 * Python 2.7 over or Python 3.4 over
-* pip 1.5.6 over
+* pip 1.5.6 or 6.1.1 over
 * wheel 0.24.0 over
   
+Features
+========
+
+* Generating Linkdraw data.
+
