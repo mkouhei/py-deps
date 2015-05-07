@@ -79,7 +79,7 @@ with open('extras_requirement.txt', 'w') as _file:
     _file.write('\n'.join(extras_require.get('reST')))
 
 setup(name='py-deps',
-      version='0.1.0',
+      version='0.1.1',
       description='parsing the Python deps and generating graph data',
       long_description=long_description,
       author='Kouhei Maeda',
