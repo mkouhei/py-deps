@@ -1,3 +1,5 @@
 [MESSAGES CONTROL]
 disable=
     expression-not-assigned,
+    no-name-in-module,
+    import-error
