@@ -3,14 +3,19 @@
 import os
 import tempfile
 import re
-import pip.util
+import pip
 import wheel.util
 from glob import glob
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
+from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 from py_deps import graph
+if pip.__version__ >= '6.0.0':
+    from pip.utils import rmtree
+else:
+    from pip.util import rmtree
 
 
 SUFFIX = '-py_deps'
@@ -29,12 +34,14 @@ class Package(object):
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
         self.finder = PackageFinder(find_links=[],
-                                    index_urls=[self.index_url])
+                                    index_urls=[self.index_url],
+                                    session=PipSession())
         self.reqset = RequirementSet(build_dir=self.tempdir,
                                      src_dir=src_prefix,
                                      download_dir=None,
                                      upgrade=True,
-                                     ignore_installed=True)
+                                     ignore_installed=True,
+                                     session=PipSession())
 
         req = InstallRequirement.from_line(name,
                                            comes_from=None)
@@ -53,9 +60,9 @@ class Package(object):
         if alldir:
             for tempdir in glob("%s/tmp*%s" % (os.path.dirname(self.tempdir),
                                                SUFFIX)):
-                pip.util.rmtree(tempdir, ignore_errors=True)
+                rmtree(tempdir, ignore_errors=True)
         else:
-            pip.util.rmtree(self.tempdir, ignore_errors=True)
+            rmtree(self.tempdir, ignore_errors=True)
 
     def _download(self):
         """Download packages to build_dir.
