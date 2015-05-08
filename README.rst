@@ -14,8 +14,8 @@ Status
    :target: http://travis-ci.org/mkouhei/py-deps
 .. image:: https://coveralls.io/repos/mkouhei/py-deps/badge.png?branch=master
    :target: https://coveralls.io/r/mkouhei/py-deps?branch=master
-.. image:: https://pypip.in/v/py-deps/badge.png
-   :target: https://crate.io/packages/py-deps
+.. image:: https://img.shields.io/pypi/v/py-deps.svg
+   :target: https://pypi.python.org/pypi/py-deps
 .. image:: https://readthedocs.org/projects/py-deps/badge/?version=latest
    :target: https://readthedocs.org/projects/py-deps/?badge=latest
    :alt: Documentation Status
