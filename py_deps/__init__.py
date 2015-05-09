@@ -3,14 +3,41 @@ r"""py-deps provides parsing the Python deps and generating graph data.
 Initialize
 ----------
 
-::
+Cache the parsed dependencies into the ``py-deps.pickle``
+on current working directory.This file format is
+`pickle <https://docs.python.org/2.7/library/pickle.html>`_.::
 
     $ python
     >>> from py_deps import Package
     >>> pkg = Package('py-deps')
 
+
+Change cache file
+~~~~~~~~~~~~~~~~~
+
+Use cache_name argument.::
+
+    >>> pkg = Package('py-deps', cache_name='some-cache.name')
+
+
+Override cache forcely
+~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``update_force`` argument. (default: ``False``)::
+
+    >>> pkg = Package('py-deps', update_force=True)
+
+
+Generate rendering data
+-----------------------
+
+Supports follows currently.
+
+* pretty print
+* Linkdraw
+
 Pretty print
-------------
+~~~~~~~~~~~~
 
 ::
 
@@ -24,7 +51,7 @@ Pretty print
     >>>
 
 Linkdraw
---------
+~~~~~~~~
 
 ::
 

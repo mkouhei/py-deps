@@ -19,7 +19,9 @@ else:
     from pip.util import rmtree
 
 
+#: suffix of temporary directory name
 SUFFIX = '-py_deps'
+#: default cache file name
 DEFAULT_CACHE_NAME = 'py-deps.pickle'
 
 
