@@ -84,7 +84,7 @@ class Package(object):
         self.container = cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
-        if self.container.get(name) is None or update_force:
+        if cache.read_data(name) is None or update_force:
 
             self.finder = PackageFinder(find_links=[],
                                         index_urls=[self.index_url],
@@ -104,7 +104,7 @@ class Package(object):
             self._trace_chain()
             cache.store_data(name, self.traced_chain)
         else:
-            self.traced_chain = self.container.get(name)
+            self.traced_chain = cache.read_data(name)
             self.cleanup()
 
     def cleanup(self, alldir=False):
