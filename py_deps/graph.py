@@ -42,7 +42,7 @@ class Linkdraw(object):
         self.chain_data = chain_data
         self.descr = "%s dependencies" % chain_data[0].name
 
-    def _geneate_node(self, node, nodes):
+    def _generate_node(self, node, nodes):
         """Generate node data."""
         if self._check_node(node, nodes):
             nodes.append(dict(name=self._normalize_name(node.name),
@@ -69,7 +69,7 @@ class Linkdraw(object):
         """Generate nodes data."""
         nodes = []
         for node in self.chain_data:
-            self._geneate_node(node, nodes)
+            self._generate_node(node, nodes)
         return nodes
 
     def generate_lines(self):
