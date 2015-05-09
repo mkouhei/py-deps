@@ -24,24 +24,32 @@ class PackageTests(unittest.TestCase):
             self.linkdraw = json.loads(fobj.read())
 
         self.pkg = Package('py-deps')
+        self.pkg_cache = Package('py-deps',
+                                 cache_name='py_deps/tests/data/test-cache')
 
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
+        os.remove('py-deps.pickle')
 
     def test_pretty_print(self):
         """Pretty print test."""
         self.assertEqual(self.pkg.draw(),
+                         self.pretty_print)
+        self.assertEqual(self.pkg_cache.draw(),
                          self.pretty_print)
 
     def test_linkdraw(self):
         """Linkdraw test."""
         data = json.loads(self.pkg.draw('linkdraw'))
         data['time'] = None
+        data_cache = json.loads(self.pkg_cache.draw('linkdraw'))
+        data_cache['time'] = None
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
+        self.assertEqual(data_cache, self.linkdraw)
 
     def test_cleanup_all(self):
         """Cleanup tests."""

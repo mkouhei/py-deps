@@ -11,6 +11,7 @@ from pip.locations import src_prefix
 from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
+import pickle
 from py_deps import graph
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
@@ -21,6 +22,53 @@ else:
 SUFFIX = '-py_deps'
 
 
+class Container(object):
+
+    """Package container class."""
+
+    #: default_cache_name
+    default_cache_name = 'py-deps.pickle'
+
+    def __init__(self, cache_name=None):
+        """Initialize."""
+        if cache_name:
+            self.cache_name = cache_name
+        else:
+            self.cache_name = self.default_cache_name
+        self.container = {}
+        self.load_cache()
+
+    def load_cache(self):
+        """Load cache file."""
+        if os.path.isfile(self.cache_name):
+            with open(self.cache_name, 'rb') as fobj:
+                self.container = pickle.load(fobj)
+
+    def save_cache(self):
+        """Save cache file."""
+        with open(self.cache_name, 'wb') as fobj:
+            pickle.dump(self.container, fobj)
+
+    def read_data(self, key):
+        """Read traced_chain data.
+
+        :rtype: list
+        :return: dependency chain list
+
+        :param str key: package name
+        """
+        return self.container.get(key)
+
+    def store_data(self, key, data):
+        """Store traced_chain data.
+
+        :param str key: package name
+        :param list data: traced dependency chain data
+        """
+        self.container[key] = data
+        self.save_cache()
+
+
 class Package(object):
 
     """Package class."""
@@ -28,27 +76,36 @@ class Package(object):
     #: index_url
     index_url = 'https://pypi.python.org/simple'
 
-    def __init__(self, name):
+    def __init__(self, name, cache_name=None, update_force=False):
         """Initialize to parsing dependencies of package."""
+        #: package name
         self.name = name
+        cache = Container(cache_name)
+        self.container = cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
-        self.finder = PackageFinder(find_links=[],
-                                    index_urls=[self.index_url],
-                                    session=PipSession())
-        self.reqset = RequirementSet(build_dir=self.tempdir,
-                                     src_dir=src_prefix,
-                                     download_dir=None,
-                                     upgrade=True,
-                                     ignore_installed=True,
-                                     session=PipSession())
+        if self.container.get(name) is None or update_force:
 
-        req = InstallRequirement.from_line(name,
-                                           comes_from=None)
-        self.reqset.add_requirement(req)
-        self.requires = []
-        self.traced_chain = []
-        self._trace_chain()
+            self.finder = PackageFinder(find_links=[],
+                                        index_urls=[self.index_url],
+                                        session=PipSession())
+            self.reqset = RequirementSet(build_dir=self.tempdir,
+                                         src_dir=src_prefix,
+                                         download_dir=None,
+                                         upgrade=True,
+                                         ignore_installed=True,
+                                         session=PipSession())
+
+            req = InstallRequirement.from_line(name,
+                                               comes_from=None)
+            self.reqset.add_requirement(req)
+            self.requires = []
+            self.traced_chain = []
+            self._trace_chain()
+            cache.store_data(name, self.traced_chain)
+        else:
+            self.traced_chain = self.container.get(name)
+            self.cleanup()
 
     def cleanup(self, alldir=False):
         """Cleanup temporary build directory.

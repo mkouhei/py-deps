@@ -10,3 +10,4 @@ dist/
 .cache
 htmlcov
 *requirement*.txt
+*.pickle
