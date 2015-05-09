@@ -20,6 +20,7 @@ else:
 
 
 SUFFIX = '-py_deps'
+DEFAULT_CACHE_NAME = 'py-deps.pickle'
 
 
 class Container(object):
@@ -27,14 +28,14 @@ class Container(object):
     """Package container class."""
 
     #: default_cache_name
-    default_cache_name = 'py-deps.pickle'
+    # default_cache_name = 'py-deps.pickle'
 
     def __init__(self, cache_name=None):
         """Initialize."""
         if cache_name:
             self.cache_name = cache_name
         else:
-            self.cache_name = self.default_cache_name
+            self.cache_name = DEFAULT_CACHE_NAME
         self.container = {}
         self.load_cache()
 

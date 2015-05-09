@@ -6,8 +6,7 @@ import os
 import tempfile
 import json
 from glob import glob
-from py_deps import Package
-from py_deps.deps import SUFFIX
+from py_deps import deps
 
 
 class PackageTests(unittest.TestCase):
@@ -23,16 +22,18 @@ class PackageTests(unittest.TestCase):
         with open('py_deps/tests/data/linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        self.pkg = Package('py-deps')
-        self.pkg_cache = Package('py-deps',
-                                 cache_name='py_deps/tests/data/test-cache')
+        deps.DEFAULT_CACHE_NAME = 'py-deps.tests'
+        self.pkg = deps.Package('py-deps')
+        self.pkg_cache = deps.Package(
+            'py-deps',
+            cache_name='py_deps/tests/data/test-cache')
 
-        self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
+        self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove('py-deps.pickle')
+        os.remove(deps.DEFAULT_CACHE_NAME)
 
     def test_pretty_print(self):
         """Pretty print test."""
@@ -55,4 +56,5 @@ class PackageTests(unittest.TestCase):
         """Cleanup tests."""
         self.pkg.cleanup(alldir=True)
         self.assertListEqual(
-            glob('%s/tmp*%s' % (os.path.dirname(self.tempdir), SUFFIX)), [])
+            glob('%s/tmp*%s' % (os.path.dirname(self.tempdir), deps.SUFFIX)),
+            [])
