@@ -27,9 +27,6 @@ class Container(object):
 
     """Package container class."""
 
-    #: default_cache_name
-    # default_cache_name = 'py-deps.pickle'
-
     def __init__(self, cache_name=None):
         """Initialize."""
         if cache_name:
