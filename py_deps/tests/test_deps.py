@@ -13,6 +13,8 @@ class PackageTests(unittest.TestCase):
 
     """Test of Package class."""
 
+    cache = 'py-deps.tests'
+
     def setUp(self):
         """Initialize."""
         # self.maxDiff = None
@@ -22,11 +24,8 @@ class PackageTests(unittest.TestCase):
         with open('py_deps/tests/data/linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        deps.DEFAULT_CACHE_NAME = 'py-deps.tests'
+        deps.DEFAULT_CACHE_NAME = self.cache
         self.pkg = deps.Package('py-deps')
-        self.pkg_cache = deps.Package(
-            'py-deps',
-            cache_name='py_deps/tests/data/test-cache')
 
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
@@ -39,18 +38,19 @@ class PackageTests(unittest.TestCase):
         """Pretty print test."""
         self.assertEqual(self.pkg.draw(),
                          self.pretty_print)
-        self.assertEqual(self.pkg_cache.draw(),
+
+        # cache test
+        pkg_cache = deps.Package('py-deps',
+                                 cache_name=self.cache)
+        self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
 
     def test_linkdraw(self):
         """Linkdraw test."""
         data = json.loads(self.pkg.draw('linkdraw'))
         data['time'] = None
-        data_cache = json.loads(self.pkg_cache.draw('linkdraw'))
-        data_cache['time'] = None
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
-        self.assertEqual(data_cache, self.linkdraw)
 
     def test_cleanup_all(self):
         """Cleanup tests."""
