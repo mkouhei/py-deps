@@ -237,7 +237,11 @@ def _dist_to_node(dist_obj):
 def _wheel_to_node(metadata):
     """Convert wheel metadata to Node objects."""
     node = Node(metadata.get('name'),
-                version=metadata.get('version'))
+                version=metadata.get('version'),
+                url=(metadata.get('extensions')
+                     .get('python.details')
+                     .get('project_urls')
+                     .get('Home')))
     if metadata.get('run_requires'):
         for requires in metadata.get('run_requires'):
             node.add_targets(_parse_require(requires.get('requires')))
