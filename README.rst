@@ -31,5 +31,5 @@ Features
 ========
 
 * Generating Linkdraw data.
-* Cache the parsed dependencies with pickle.
+* Cache the parsed dependencies.
 

@@ -1,6 +1,12 @@
 History
 =======
 
+0.2.0 (2015-05-10)
+------------------
+
+* Cache the parsed dependencies.
+* Fixes setting the url of node and targets.
+
 0.1.1 (2015-05-08)
 ------------------
 
