@@ -45,17 +45,19 @@ class Linkdraw(object):
     def _generate_node(self, node, nodes):
         """Generate node data."""
         if self._check_node(node, nodes):
+            metadata = self._get_metadata(node.name)
             nodes.append(dict(name=self._normalize_name(node.name),
                               r=self.default_radius,
                               color=self.default_color,
-                              link=self._normalize_url(node.url)))
+                              link=self._normalize_url(metadata.url)))
         if len(node.targets) > 0:
             for target in node.targets:
                 if self._check_node(target, nodes):
+                    metadata = self._get_metadata(target.name)
                     nodes.append(dict(name=self._normalize_name(target.name),
                                       r=self.default_radius,
                                       color=self.requires_color,
-                                      link=self._normalize_url(target.url)))
+                                      link=self._normalize_url(metadata.url)))
 
     def _check_node(self, node, nodes):
         """Check appended node."""
@@ -102,3 +104,19 @@ class Linkdraw(object):
     def _normalize_name(name):
         """Normalize name."""
         return name.replace('[', '____').replace(']', '')
+
+    def _get_metadata(self, name):
+        """get the metadata of package."""
+        data = [req for req in self.chain_data if req.name == name]
+        if len(data) == 1:
+            return data[0]
+        else:
+            return Metadata()
+
+
+class Metadata(object):
+
+    """Metadata object class."""
+
+    version = None
+    url = None
