@@ -3,4 +3,6 @@ disable=
     expression-not-assigned,
     no-name-in-module,
     import-error,
-    too-few-public-methods
+    too-few-public-methods,
+    arguments-differ,
+    unused-argument

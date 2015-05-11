@@ -101,7 +101,7 @@ class Package(object):
             self.reqset.add_requirement(req)
             self.requires = []
             self.traced_chain = []
-            self._trace_chain()
+            self.trace_chain()
             cache.store_data(name, self.traced_chain)
         else:
             self.traced_chain = cache.read_data(name)
@@ -140,7 +140,7 @@ class Package(object):
             self.cleanup()
         return self.requires
 
-    def _trace_chain(self, pkg_name=None):
+    def trace_chain(self, pkg_name=None):
         """Trace dependency chain.
 
         :param str pkg_name: package name
@@ -155,7 +155,7 @@ class Package(object):
             self.traced_chain.append(pkg[0])
         if len(pkg[0].targets) > 0:
             for target in pkg[0].targets:
-                self._trace_chain(target.name)
+                self.trace_chain(target.name)
 
     def _collect_requires(self):
         """Collect requires object or dict object."""

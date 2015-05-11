@@ -4,8 +4,10 @@
 import unittest
 import os
 import tempfile
+import shutil
 import json
 from glob import glob
+from mock import patch
 from py_deps import deps
 
 
@@ -15,7 +17,8 @@ class PackageTests(unittest.TestCase):
 
     cache = 'py-deps.tests'
 
-    def setUp(self):
+    @patch('pip.req.RequirementSet.prepare_files')
+    def setUp(self, _mock):
         """Initialize."""
         # self.maxDiff = None
         with open('py_deps/tests/data/pretty_print') as fobj:
@@ -25,8 +28,14 @@ class PackageTests(unittest.TestCase):
             self.linkdraw = json.loads(fobj.read())
 
         deps.DEFAULT_CACHE_NAME = self.cache
+        cache = deps.Container(self.cache)
         self.pkg = deps.Package('py-deps')
-
+        for pkg in glob('py_deps/tests/data/meta/*'):
+            shutil.copytree(pkg,
+                            os.path.join(self.pkg.tempdir,
+                                         os.path.basename(pkg)))
+        self.pkg.trace_chain()
+        cache.store_data('py-deps', self.pkg.traced_chain)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
