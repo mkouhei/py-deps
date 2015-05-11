@@ -66,7 +66,8 @@ long_description = (
 
 requires = ['setuptools',
             'pip',
-            'wheel']
+            'wheel',
+            'networkx']
 extras_require = {
     'reST': ['Sphinx'],
     }

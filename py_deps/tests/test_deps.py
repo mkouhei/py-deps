@@ -52,6 +52,11 @@ class PackageTests(unittest.TestCase):
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
 
+    def test_networkx(self):
+        """Networkx test."""
+        self.assertEqual(len(self.pkg.draw('dot').nodes()), 20)
+        self.assertEqual(len(self.pkg.draw('dot').edges()), 21)
+
     def test_cleanup_all(self):
         """Cleanup tests."""
         self.pkg.cleanup(alldir=True)

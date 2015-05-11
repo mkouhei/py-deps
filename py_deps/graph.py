@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """py_deps.graph module."""
 import json
+import networkx
 from datetime import datetime
 
 
 def router(chain_data, draw_type=None):
     """Routing drawing tool."""
     if draw_type == 'dot':
-        pass
+        dot = Networkx(chain_data)
+        return dot.generate_data()
     elif draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
@@ -28,9 +30,9 @@ def pretty_print(chain_data):
     return lines.rstrip()
 
 
-class Linkdraw(object):
+class Graph(object):
 
-    """Linkdraw data generate class."""
+    """Graph data generate abstract class."""
 
     default_radius = "6"
     default_color = ""
@@ -40,7 +42,6 @@ class Linkdraw(object):
     def __init__(self, chain_data):
         """Initialize."""
         self.chain_data = chain_data
-        self.descr = "%s dependencies" % chain_data[0].name
 
     def _generate_node(self, node, nodes):
         """Generate node data."""
@@ -49,6 +50,7 @@ class Linkdraw(object):
             nodes.append(dict(name=self._normalize_name(node.name),
                               r=self.default_radius,
                               color=self.default_color,
+                              version=metadata.version,
                               link=self._normalize_url(metadata.url)))
         if len(node.targets) > 0:
             for target in node.targets:
@@ -57,6 +59,7 @@ class Linkdraw(object):
                     nodes.append(dict(name=self._normalize_name(target.name),
                                       r=self.default_radius,
                                       color=self.requires_color,
+                                      version=metadata.version,
                                       link=self._normalize_url(metadata.url)))
 
     def _check_node(self, node, nodes):
@@ -74,24 +77,6 @@ class Linkdraw(object):
             self._generate_node(node, nodes)
         return nodes
 
-    def generate_lines(self):
-        """Generate lines data."""
-        return [dict(source=self._normalize_name(node.name),
-                     target=self._normalize_name(target.name),
-                     color=self.requires_color,
-                     width=self.default_width,
-                     descr="→",
-                     link="")
-                for node in self.chain_data
-                for target in node.targets]
-
-    def generate_data(self):
-        """Generate Linkdraw data."""
-        return json.dumps(dict(time=datetime.utcnow().isoformat(),
-                               descr=self.descr,
-                               nodes=self.generate_nodes(),
-                               lines=self.generate_lines()))
-
     @staticmethod
     def _normalize_url(url):
         """return package url."""
@@ -103,7 +88,7 @@ class Linkdraw(object):
     @staticmethod
     def _normalize_name(name):
         """Normalize name."""
-        return name.replace('[', '____').replace(']', '')
+        return name
 
     def _get_metadata(self, name):
         """get the metadata of package."""
@@ -120,3 +105,63 @@ class Metadata(object):
 
     version = None
     url = None
+
+
+class Linkdraw(Graph):
+
+    """Linkdraw object class."""
+
+    def __init__(self, chain_data):
+        """Initialize."""
+        super(Linkdraw, self).__init__(chain_data)
+        self.descr = "%s dependencies" % chain_data[0].name
+
+    def generate_edges(self):
+        """Generate edges data."""
+        return [dict(source=self._normalize_name(node.name),
+                     target=self._normalize_name(target.name),
+                     color=self.requires_color,
+                     width=self.default_width,
+                     descr="→",
+                     link="")
+                for node in self.chain_data
+                for target in node.targets]
+
+    def generate_data(self):
+        """Generate Linkdraw data."""
+        return json.dumps(dict(time=datetime.utcnow().isoformat(),
+                               descr=self.descr,
+                               nodes=self.generate_nodes(),
+                               lines=self.generate_edges()))
+
+    @staticmethod
+    def _normalize_name(name):
+        """Normalize name."""
+        return name.replace('[', '____').replace(']', '')
+
+
+class Networkx(Graph):
+
+    """Networkx object class."""
+
+    def __init__(self, chain_data):
+        """Initialize."""
+        super(Networkx, self).__init__(chain_data)
+        self.graph = networkx.DiGraph()
+
+    def generate_edges(self):
+        """Generate edges data."""
+        self.graph.add_edges_from([(self._normalize_name(node.name),
+                                    self._normalize_name(target.name))
+                                   for node in self.chain_data
+                                   for target in node.targets],
+                                  color=self.requires_color)
+
+    def generate_data(self):
+        """Generate networkx graph data."""
+        for node in self.generate_nodes():
+            self.graph.add_node(node['name'],
+                                version=node['version'],
+                                link=node['link'])
+        self.generate_edges()
+        return self.graph
