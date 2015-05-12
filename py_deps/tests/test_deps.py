@@ -69,8 +69,8 @@ class WheelTests(unittest.TestCase):
 
     def test_networkx(self):
         """Networkx test."""
-        self.assertEqual(len(self.pkg.draw('dot').nodes()), 20)
-        self.assertEqual(len(self.pkg.draw('dot').edges()), 21)
+        self.assertEqual(len(self.pkg.draw('networkx').nodes()), 20)
+        self.assertEqual(len(self.pkg.draw('networkx').edges()), 21)
 
     def test_cleanup_all(self):
         """Cleanup tests."""
@@ -125,8 +125,8 @@ class EggTests(unittest.TestCase):
 
     def test_networkx(self):
         """Networkx test."""
-        self.assertEqual(len(self.pkg.draw('dot').nodes()), 11)
-        self.assertEqual(len(self.pkg.draw('dot').edges()), 10)
+        self.assertEqual(len(self.pkg.draw('networkx').nodes()), 11)
+        self.assertEqual(len(self.pkg.draw('networkx').edges()), 10)
 
     def test_cleanup_all(self):
         """Cleanup tests."""

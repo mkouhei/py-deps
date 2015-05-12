@@ -7,9 +7,9 @@ from datetime import datetime
 
 def router(chain_data, draw_type=None):
     """Routing drawing tool."""
-    if draw_type == 'dot':
-        dot = Networkx(chain_data)
-        return dot.generate_data()
+    if draw_type == 'networkx':
+        nwx = Networkx(chain_data)
+        return nwx.generate_data()
     elif draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
