@@ -5,7 +5,7 @@
 The ``py-dep`` provides parsing the dependencies of Python packages
 and generating the metadata for graph.
 
-The graph data is for `Graphviz <http://www.graphviz.org/>`_, `blockdiag <http://blockdiag.com/>`_, `Linkdraw <https://github.com/mtoshi/linkdraw/wiki>`_, etc.
+The graph data is for `NetworkX <http://networkx.github.io/>`_, `Graphviz <http://www.graphviz.org/>`_, `blockdiag <http://blockdiag.com/>`_, `Linkdraw <https://github.com/mtoshi/linkdraw/wiki>`_, etc.
 
 Status
 ======
@@ -26,10 +26,12 @@ Requirements
 * Python 2.7 over or Python 3.3 over or PyPy 2.4.0 over
 * pip 1.5.6 or 6.1.1 over
 * wheel 0.24.0 over
+* NetworkX 1.9 over
   
 Features
 ========
 
 * Generating Linkdraw data.
+* Generating Networkx DiGraph object data.
 * Cache the parsed dependencies.
 

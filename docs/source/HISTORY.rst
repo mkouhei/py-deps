@@ -1,6 +1,13 @@
 History
 =======
 
+0.3.0 (2015-05-12)
+------------------
+
+* Supports NetworkX DiGraph objects.
+* Changes to use mock instead of pip.req.RequirementSet.prepare_files.
+* Coverage 98% over.
+
 0.2.0 (2015-05-10)
 ------------------
 
