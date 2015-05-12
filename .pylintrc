@@ -5,4 +5,5 @@ disable=
     import-error,
     too-few-public-methods,
     arguments-differ,
-    unused-argument
+    unused-argument,
+    no-value-for-parameter
