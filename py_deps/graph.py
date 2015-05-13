@@ -122,7 +122,7 @@ class Linkdraw(Graph):
                      target=self._normalize_name(target.name),
                      color=self.requires_color,
                      width=self.default_width,
-                     descr="→",
+                     descr="->",
                      link="")
                 for node in self.chain_data
                 for target in node.targets]
