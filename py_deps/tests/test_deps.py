@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """py_deps.tests.test_deps module."""
-
+import sys
 import unittest
 import os
 import tempfile
@@ -22,6 +22,49 @@ def prepare(pkg_name, meta_type, cache, _mock):
     pkg.trace_chain()
     cache.store_data(pkg_name, pkg.traced_chain)
     return pkg
+
+
+def search_result():
+    """generate dummy result."""
+    with open('py_deps/tests/data/search_result') as fobj:
+        return json.loads(fobj.read())
+
+
+class SearchTests(unittest.TestCase):
+
+    """Test of search via XMLRPC."""
+
+    if sys.version_info < (3, 0):
+        @patch('xmlrpclib.ServerProxy')
+        def test_search(self, _mock):
+            """search package."""
+            client_mock = _mock.return_value
+            client_mock.search.return_value = search_result()
+            self.assertListEqual(deps.Package.search('deps'), search_result())
+
+        @patch('xmlrpclib.ServerProxy')
+        def test_search_exactly(self, _mock):
+            """search package exactly."""
+            client_mock = _mock.return_value
+            client_mock.search.return_value = search_result()
+            self.assertListEqual(deps.Package.search('py-deps', exactly=True),
+                                 [search_result()[8]])
+
+    if sys.version_info > (3, 0):
+        @patch('xmlrpc.client.ServerProxy')
+        def test_search_py3(self, _mock):
+            """search package."""
+            client_mock = _mock.return_value
+            client_mock.search.return_value = search_result()
+            self.assertListEqual(deps.Package.search('deps'), search_result())
+
+        @patch('xmlrpc.client.ServerProxy')
+        def test_search_exactly_py3(self, _mock):
+            """search package exactly."""
+            client_mock = _mock.return_value
+            client_mock.search.return_value = search_result()
+            self.assertListEqual(deps.Package.search('py-deps', exactly=True),
+                                 [search_result()[8]])
 
 
 class WheelTests(unittest.TestCase):

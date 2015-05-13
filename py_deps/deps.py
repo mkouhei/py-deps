@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """py_deps.deps module."""
+import sys
 import os
 import tempfile
 import re
@@ -17,12 +18,17 @@ if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
 else:
     from pip.util import rmtree
+if sys.version_info > (3, 0):
+    import xmlrpc.client as xmlrpclib
+else:
+    import xmlrpclib
 
 
 #: suffix of temporary directory name
 SUFFIX = '-py_deps'
 #: default cache file name
 DEFAULT_CACHE_NAME = 'py-deps.pickle'
+PYPI_URL = 'https://pypi.python.org/pypi'
 
 
 class Container(object):
@@ -106,6 +112,23 @@ class Package(object):
         else:
             self.traced_chain = cache.read_data(name)
             self.cleanup()
+
+    @classmethod
+    def search(cls, pkg_name, exactly=False):
+        """Search package.
+
+        :rtype: list
+        :return: search packages
+
+        :param str pkg_name: package name.
+        :param bool exactly: exactly match only.
+        """
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        result = client.search({'name': pkg_name})
+        if exactly:
+            return [pkg for pkg in result if pkg.get('name') == pkg_name]
+        else:
+            return result
 
     def cleanup(self, alldir=False):
         """Cleanup temporary build directory.
