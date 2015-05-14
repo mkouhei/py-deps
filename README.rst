@@ -34,4 +34,4 @@ Features
 * Generating Linkdraw data.
 * Generating Networkx DiGraph object data.
 * Cache the parsed dependencies.
-
+* Searching packages from PyPI.

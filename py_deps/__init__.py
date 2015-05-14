@@ -1,5 +1,15 @@
 r"""py-deps provides parsing the Python deps and generating graph data.
 
+Search packages
+---------------
+
+Search packages from PyPI.::
+
+    $ python
+    >>> from py_deps import Package
+    >>> Package.search('deps')
+
+
 Initialize
 ----------
 
