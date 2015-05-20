@@ -1,14 +1,10 @@
 language: python
 sudo: false
 env:
-  - TOX_ENV=py27-pip156
-  - TOX_ENV=py27-pip611
-  - TOX_ENV=py33-pip156
-  - TOX_ENV=py33-pip611
-  - TOX_ENV=py34-pip156
-  - TOX_ENV=py34-pip611
-  - TOX_ENV=pypy-pip156
-  - TOX_ENV=pypy-pip611
+  - TOX_ENV=py27
+  - TOX_ENV=py33
+  - TOX_ENV=py34
+  - TOX_ENV=pypy
 install:
   - pip install coveralls tox
 script:
