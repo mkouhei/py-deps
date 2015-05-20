@@ -1,11 +1,30 @@
 language: python
-python: 2.7
+python:
+  - 2.7
+  - 3.3
+  - 3.4
 sudo: false
 env:
-  - TOX_ENV=py27
-  - TOX_ENV=py33
-  - TOX_ENV=py34
-  - TOX_ENV=pypy
+  - TOX_ENV=py27-pip156
+  - TOX_ENV=py27-pip600
+  - TOX_ENV=py27-pip608
+  - TOX_ENV=py27-pip610
+  - TOX_ENV=py27-pip611
+  - TOX_ENV=py33-pip156
+  - TOX_ENV=py33-pip600
+  - TOX_ENV=py33-pip608
+  - TOX_ENV=py33-pip610
+  - TOX_ENV=py33-pip611
+  - TOX_ENV=py34-pip156
+  - TOX_ENV=py34-pip600
+  - TOX_ENV=py34-pip608
+  - TOX_ENV=py34-pip610
+  - TOX_ENV=py34-pip611
+  - TOX_ENV=pypy-pip156
+  - TOX_ENV=pypy-pip600
+  - TOX_ENV=pypy-pip608
+  - TOX_ENV=pypy-pip610
+  - TOX_ENV=pypy-pip611
 install:
   - pip install coveralls tox
 script:
