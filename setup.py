@@ -65,7 +65,7 @@ long_description = (
     open(os.path.join("docs/source", "HISTORY.rst")).read())
 
 requires = ['setuptools',
-            'pip',
+            'pip>=6.0.1',
             'wheel',
             'networkx']
 extras_require = {
