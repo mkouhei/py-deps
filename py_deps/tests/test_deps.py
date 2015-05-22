@@ -102,7 +102,7 @@ class WheelTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.dict().get('py-deps')), 4)
+        self.assertEqual(len(self.container.list_data().get('py-deps')), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -159,7 +159,7 @@ class EggTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.dict().get('swiftsc')), 4)
+        self.assertEqual(len(self.container.list_data().get('swiftsc')), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""

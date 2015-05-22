@@ -74,7 +74,7 @@ class Container(object):
         self.container[key] = data
         self.save_cache()
 
-    def dict(self):
+    def list_data(self):
         """Return dictionary stored package metadata.
 
         :rtype: dict
