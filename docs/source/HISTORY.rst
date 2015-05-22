@@ -1,6 +1,11 @@
 History
 =======
 
+0.5.0 (not released)
+--------------------
+
+* Adds Container.list_data method.
+
 0.4.0 (2015-05-20)
 ------------------
 

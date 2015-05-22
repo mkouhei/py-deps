@@ -196,5 +196,25 @@ Linkdraw
        u'r': u'6'}],
      u'time': u'2015-05-08T03:52:59.542732'}
 
+
+Check cache
+-----------
+
+Stores parsed dependency metadata to pickles data file.
+The file name is ``py-deps.pickle`` in default.
+
+Listing cached data with the ``list_data`` method of :class:`Container`.::
+
+    >>> from py_deps import Container
+    >>> Container().list_data()
+    {'py-deps': [py-deps, setuptools, pip, wheel, networkx, decorator],
+     (snip)}
+
+Read the cached package with ``read_data`` method of :class:`Container`.
+This method returns :class:`Package.traced_chain`.
+
+    >>> Container().read_data('py-deps')
+    [py-deps, setuptools, pip, wheel, networkx, decorator]
+
 """
 from py_deps.deps import Package, Container  # silence pyflakes
