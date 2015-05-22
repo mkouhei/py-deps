@@ -83,8 +83,8 @@ class WheelTests(unittest.TestCase):
             self.linkdraw = json.loads(fobj.read())
 
         deps.DEFAULT_CACHE_NAME = self.cache
-        cache = deps.Container(self.cache)
-        self.pkg = prepare('py-deps', 'wheel', cache)
+        self.container = deps.Container(self.cache)
+        self.pkg = prepare('py-deps', 'wheel', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -102,6 +102,7 @@ class WheelTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
+        self.assertEqual(len(self.container.dict().get('py-deps')), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -139,8 +140,8 @@ class EggTests(unittest.TestCase):
             self.linkdraw = json.loads(fobj.read())
 
         deps.DEFAULT_CACHE_NAME = self.cache
-        cache = deps.Container(self.cache)
-        self.pkg = prepare('swiftsc', 'egg', cache)
+        self.container = deps.Container(self.cache)
+        self.pkg = prepare('swiftsc', 'egg', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -158,6 +159,7 @@ class EggTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
+        self.assertEqual(len(self.container.dict().get('swiftsc')), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""

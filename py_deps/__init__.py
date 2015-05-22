@@ -197,4 +197,4 @@ Linkdraw
      u'time': u'2015-05-08T03:52:59.542732'}
 
 """
-from py_deps.deps import Package  # silence pyflakes
+from py_deps.deps import Package, Container  # silence pyflakes
