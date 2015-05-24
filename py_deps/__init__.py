@@ -197,6 +197,9 @@ Linkdraw
      u'time': u'2015-05-08T03:52:59.542732'}
 
 
+See also `How to use linkdraw
+<https://github.com/mtoshi/linkdraw/wiki#how-to-use-linkdraw>`_.
+
 Check cache
 -----------
 
@@ -215,6 +218,7 @@ This method returns :class:`Package.traced_chain`.
 
     >>> Container().read_data('py-deps')
     [py-deps, setuptools, pip, wheel, networkx, decorator]
+
 
 """
 from py_deps.deps import Package, Container  # silence pyflakes
