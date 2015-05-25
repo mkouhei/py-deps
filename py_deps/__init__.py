@@ -200,6 +200,16 @@ Linkdraw
 See also `How to use linkdraw
 <https://github.com/mtoshi/linkdraw/wiki#how-to-use-linkdraw>`_.
 
+
+NetworkX
+~~~~~~~~
+
+::
+
+    >>> pkg.draw('networkx')
+    >>> <networkx.classes.digraph.DiGraph at 0x7fbe2311dbd0>
+
+
 Check cache
 -----------
 
