@@ -44,6 +44,11 @@ class Tox(TestCommand):
         sys.exit(errno)
 
 
+def read_content(filepath):
+    with open(filepath) as fobj:
+        return fobj.read()
+
+
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -61,8 +66,8 @@ classifiers = [
 
 
 long_description = (
-    open("README.rst").read() +
-    open(os.path.join("docs/source", "HISTORY.rst")).read())
+    read_content("README.rst") +
+    read_content(os.path.join("docs/source", "HISTORY.rst")))
 
 requires = ['setuptools',
             'pip>=6.0.1',
