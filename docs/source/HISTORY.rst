@@ -5,6 +5,7 @@ History
 --------------------
 
 * Adds Container.list_data method.
+* Unsupports wheel format for distribution.
 
 0.4.0 (2015-05-20)
 ------------------
