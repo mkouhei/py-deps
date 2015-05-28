@@ -1,8 +1,8 @@
 History
 =======
 
-0.5.0 (not released)
---------------------
+0.4.1 (2015-05-28)
+------------------
 
 * Adds Container.list_data method.
 * Unsupports wheel format for distribution.
