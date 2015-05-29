@@ -13,6 +13,7 @@ from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 import pickle
+import logging
 from py_deps import graph
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
@@ -158,7 +159,17 @@ class Package(object):
 
         This method does not download requires recursively.
         """
-        self.reqset.prepare_files(self.finder)
+        try:
+            self.reqset.prepare_files(self.finder)
+        except pip.exceptions.DistributionNotFound:
+            _type, _val, _tb = sys.exc_info()
+            msg = ("%s\n  CODE: %s\n  LINE: %s\n  NAME: %s\n  MSG : %s" %
+                   (_type,
+                    _tb.tb_frame.f_code.co_filename,
+                    _tb.tb_lineno,
+                    _tb.tb_frame.f_code.co_name,
+                    _val))
+            logging.warning(msg)
 
     def _list_requires(self):
         """Listing requires object or dict object.
