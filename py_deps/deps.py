@@ -241,8 +241,12 @@ class Package(object):
 
         :param str dist_info: ``.dist-info`` directory path.
         """
-        with open('%s/metadata.json' % dist_info, 'r') as fobj:
-            data = fobj.read()
+        if os.path.isfile(os.path.join(dist_info, 'metadata.json')):
+            with open(os.path.join(dist_info, 'metadata.json'), 'r') as fobj:
+                data = fobj.read()
+        elif os.path.isfile(os.path.join(dist_info, 'pydist.json')):
+            with open(os.path.join(dist_info, 'pydist.json'), 'r') as fobj:
+                data = fobj.read()
         metadata = wheel.util.from_json(data)
         if metadata.get('run_requires') is None:
             # To Do: parsing requirements.txt later.
@@ -267,12 +271,16 @@ def _dist_to_node(dist_obj):
 
 def _wheel_to_node(metadata):
     """Convert wheel metadata to Node objects."""
+    if metadata.get('extensions'):
+        url = (metadata.get('extensions')
+               .get('python.details')
+               .get('project_urls')
+               .get('Home'))
+    elif metadata.get('project_urls'):
+        url = metadata.get('project_urls').get('Home')
     node = Node(metadata.get('name'),
                 version=metadata.get('version'),
-                url=(metadata.get('extensions')
-                     .get('python.details')
-                     .get('project_urls')
-                     .get('Home')))
+                url=url)
     if metadata.get('run_requires'):
         for requires in metadata.get('run_requires'):
             node.add_targets(_parse_require(requires.get('requires')))
