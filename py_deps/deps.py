@@ -134,7 +134,8 @@ class Package(object):
         client = xmlrpclib.ServerProxy(PYPI_URL)
         result = client.search({'name': pkg_name})
         if exactly:
-            return [pkg for pkg in result if pkg.get('name') == pkg_name]
+            return [pkg for pkg in result
+                    if u2h(pkg.get('name')) == u2h(pkg_name)]
         else:
             return result
 
@@ -179,7 +180,7 @@ class Package(object):
         if pkg_name is None:
             pkg_name = self.name
         pkg = [req for req in self._list_requires()
-               if req.name == pkg_name]
+               if u2h(req.name) == u2h(pkg_name)]
         if len(pkg) == 0:
             return
         if pkg[0] not in self.traced_chain:
@@ -300,6 +301,17 @@ def _parse_require(requires, extras=False):
         else:
             targets.append(Target(req.split()[0], req.split()[1], extras))
     return targets
+
+
+def u2h(name):
+    """Change underscore to hyphen of package name.
+
+    :rtype: str
+    :return: string replaced underscore with hyphen
+
+    :param str name: package name
+    """
+    return name.replace('_', '-')
 
 
 class Node(object):
