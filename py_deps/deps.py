@@ -14,7 +14,7 @@ from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 import pickle
 from py_deps import graph
-from py_deps.exceptions import NotFound
+from py_deps.exceptions import NotFound, BrokenPackage
 from py_deps.logging import trace_log
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
@@ -165,6 +165,9 @@ class Package(object):
         except pip.exceptions.DistributionNotFound as exp:
             trace_log(level='warning')
             raise NotFound(exp)
+        except pip.exceptions.InstallationError as exp:
+            trace_log(level='error')
+            raise BrokenPackage(exp)
 
     def _list_requires(self):
         """Listing requires object or dict object.
@@ -214,9 +217,8 @@ class Package(object):
                     if pat.search(f)]
 
         if 'pip-egg-info' in egg_dirs:
-            egg_info = glob('%s/*' % os.path.join(pkg_dir,
-                                                  'pip-egg-info'))[0]
-            metadata = self._parse_egg_info(egg_info)
+            eggs = glob('%s/*' % os.path.join(pkg_dir, 'pip-egg-info'))
+            metadata = self._parse_egg_info(eggs[0])
         else:
             dist_info = os.path.join(pkg_dir, egg_dirs[0])
             metadata = self._parse_dist_info(dist_info)
