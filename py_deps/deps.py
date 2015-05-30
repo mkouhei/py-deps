@@ -13,8 +13,8 @@ from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 import pickle
-import logging
 from py_deps import graph
+from py_deps.logging import trace_log
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
 else:
@@ -169,7 +169,7 @@ class Package(object):
                     _tb.tb_lineno,
                     _tb.tb_frame.f_code.co_name,
                     _val))
-            logging.warning(msg)
+            trace_log(level='warning')
 
     def _list_requires(self):
         """Listing requires object or dict object.
