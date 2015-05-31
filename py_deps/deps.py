@@ -15,7 +15,7 @@ from pkg_resources import PathMetadata, Distribution
 import pickle
 from py_deps import graph
 from py_deps.exceptions import NotFound, BrokenPackage
-from py_deps.logging import trace_log
+from py_deps.logger import trace_log
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
 else:

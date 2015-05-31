@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""py_deps.logging module."""
+"""py_deps.logger module."""
 import sys
 import logging
 
