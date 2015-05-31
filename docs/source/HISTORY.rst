@@ -1,6 +1,14 @@
 History
 =======
 
+0.4.2 (2015-05-31)
+------------------
+
+* Fixes #7 not handling the failure of python setup egg_info.
+* Adds py_deps.exceptions module.
+* Adds py_deps.logger module.
+* Fixes issues of DistributionNotFound, InstallationErrror.
+
 0.4.1 (2015-05-28)
 ------------------
 
