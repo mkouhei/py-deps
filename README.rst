@@ -31,7 +31,7 @@ Requirements
 Features
 ========
 
-* Generating Linkdraw data.
+* Generating Linkdraw data (JSON and decoded JSON).
 * Generating Networkx DiGraph object data.
 * Cache the parsed dependencies.
 * Searching packages from PyPI.
