@@ -5,7 +5,7 @@ import networkx
 from datetime import datetime
 
 
-def router(chain_data, draw_type=None):
+def router(chain_data, draw_type=None, decode_type=''):
     """Routing drawing tool."""
     if draw_type == 'networkx':
         nwx = Networkx(chain_data)
@@ -13,8 +13,12 @@ def router(chain_data, draw_type=None):
     elif draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
+        print(decode_type)
         linkdraw = Linkdraw(chain_data)
-        return linkdraw.generate_data()
+        if decode_type == 'json':
+            return linkdraw.generate_data()
+        else:
+            return json.dumps(linkdraw.generate_data())
     else:
         return pretty_print(chain_data)
 
@@ -129,10 +133,10 @@ class Linkdraw(Graph):
 
     def generate_data(self):
         """Generate Linkdraw data."""
-        return json.dumps(dict(time=datetime.utcnow().isoformat(),
-                               descr=self.descr,
-                               nodes=self.generate_nodes(),
-                               lines=self.generate_edges()))
+        return dict(time=datetime.utcnow().isoformat(),
+                    descr=self.descr,
+                    nodes=self.generate_nodes(),
+                    lines=self.generate_edges())
 
     @staticmethod
     def _normalize_name(name):

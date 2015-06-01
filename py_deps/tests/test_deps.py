@@ -111,6 +111,11 @@ class WheelTests(unittest.TestCase):
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
 
+        data_decoded = self.pkg.draw('linkdraw', decode_type='json')
+        print(type(data_decoded))
+        data_decoded['time'] = None
+        self.assertEqual(data_decoded, self.linkdraw)
+
     def test_networkx(self):
         """Networkx test."""
         self.assertEqual(len(self.pkg.draw('networkx').nodes()), 20)
@@ -168,6 +173,11 @@ class WheelDeprecatedTests(unittest.TestCase):
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
 
+        data_decoded = self.pkg.draw('linkdraw', decode_type='json')
+        print(type(data_decoded))
+        data_decoded['time'] = None
+        self.assertEqual(data_decoded, self.linkdraw)
+
     def test_networkx(self):
         """Networkx test."""
         self.assertEqual(len(self.pkg.draw('networkx').nodes()), 1)
@@ -224,6 +234,11 @@ class EggTests(unittest.TestCase):
         data['time'] = None
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
+
+        data_decoded = self.pkg.draw('linkdraw', decode_type='json')
+        print(type(data_decoded))
+        data_decoded['time'] = None
+        self.assertEqual(data_decoded, self.linkdraw)
 
     def test_networkx(self):
         """Networkx test."""

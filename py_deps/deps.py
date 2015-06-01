@@ -262,12 +262,15 @@ class Package(object):
             pass
         return _wheel_to_node(metadata)
 
-    def draw(self, draw_type=None):
+    def draw(self, draw_type=None, decode_type=''):
         """Generate drawing data.
 
         :param str draw_type: [dot|blockdiag|linkdraw]
+        :param str decode_type: [''|json(linkdraw)]
         """
-        return graph.router(self.traced_chain, draw_type=draw_type)
+        return graph.router(self.traced_chain,
+                            draw_type=draw_type,
+                            decode_type=decode_type)
 
 
 def _dist_to_node(dist_obj):
