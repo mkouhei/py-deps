@@ -13,7 +13,6 @@ def router(chain_data, draw_type=None, decode_type=''):
     elif draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
-        print(decode_type)
         linkdraw = Linkdraw(chain_data)
         if decode_type == 'json':
             return linkdraw.generate_data()

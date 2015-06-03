@@ -112,7 +112,6 @@ class WheelTests(unittest.TestCase):
         self.assertEqual(data, self.linkdraw)
 
         data_decoded = self.pkg.draw('linkdraw', decode_type='json')
-        print(type(data_decoded))
         data_decoded['time'] = None
         self.assertEqual(data_decoded, self.linkdraw)
 
@@ -174,7 +173,6 @@ class WheelDeprecatedTests(unittest.TestCase):
         self.assertEqual(data, self.linkdraw)
 
         data_decoded = self.pkg.draw('linkdraw', decode_type='json')
-        print(type(data_decoded))
         data_decoded['time'] = None
         self.assertEqual(data_decoded, self.linkdraw)
 
@@ -236,7 +234,6 @@ class EggTests(unittest.TestCase):
         self.assertEqual(data, self.linkdraw)
 
         data_decoded = self.pkg.draw('linkdraw', decode_type='json')
-        print(type(data_decoded))
         data_decoded['time'] = None
         self.assertEqual(data_decoded, self.linkdraw)
 
