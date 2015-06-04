@@ -185,6 +185,8 @@ class Package(object):
         """Trace dependency chain.
 
         :param str pkg_name: package name
+
+        :rtype: None
         """
         if pkg_name is None:
             pkg_name = self.name
@@ -331,10 +333,15 @@ class Node(object):
 
     def __init__(self, name, version=None, url=None):
         """Initialize."""
+        #: name
         self.name = name
+        #: version
         self.version = version
+        #: project url
         self.url = url
+        #: targets
         self.targets = []
+        #: test targets
         self.test_targets = []
 
     def __repr__(self):
@@ -342,16 +349,25 @@ class Node(object):
         return str(self.name)
 
     def add_targets(self, nodes):
-        """Add targets."""
+        """Add targets.
+
+        :param list nodes: nodes list
+        """
         self.targets += nodes
 
     def remove_targets(self, *nodes):
-        """Remove targets."""
+        """Remove targets.
+
+        :param *list *nodes: nodes list
+        """
         for node in nodes:
             del self.targets[self.targets.index(node)]
 
     def add_test_targets(self, nodes):
-        """Add test targets."""
+        """Add test targets.
+
+        :param list nodes: nodes list for testing.
+        """
         self.test_targets += nodes
 
 
