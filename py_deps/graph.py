@@ -5,7 +5,8 @@ import networkx
 from datetime import datetime
 
 
-def router(chain_data, draw_type=None, decode_type=''):
+def router(chain_data, draw_type=None, decode_type='',
+           disable_time=False, disable_descr=False):
     """Routing drawing tool."""
     if draw_type == 'networkx':
         nwx = Networkx(chain_data)
@@ -14,6 +15,10 @@ def router(chain_data, draw_type=None, decode_type=''):
         pass
     elif draw_type == 'linkdraw':
         linkdraw = Linkdraw(chain_data)
+        if disable_time:
+            linkdraw.disable_time()
+        if disable_descr:
+            linkdraw.disable_descr()
         if decode_type == 'json':
             return linkdraw.generate_data()
         else:
@@ -118,6 +123,7 @@ class Linkdraw(Graph):
         """Initialize."""
         super(Linkdraw, self).__init__(chain_data)
         self.descr = "%s dependencies" % chain_data[0].name
+        self.time = datetime.utcnow().isoformat()
 
     def generate_edges(self):
         """Generate edges data."""
@@ -132,7 +138,7 @@ class Linkdraw(Graph):
 
     def generate_data(self):
         """Generate Linkdraw data."""
-        return dict(time=datetime.utcnow().isoformat(),
+        return dict(time=self.time,
                     descr=self.descr,
                     nodes=self.generate_nodes(),
                     lines=self.generate_edges())
@@ -141,6 +147,14 @@ class Linkdraw(Graph):
     def _normalize_name(name):
         """Normalize name."""
         return name.replace('[', '____').replace(']', '')
+
+    def disable_descr(self):
+        """Disable description."""
+        self.descr = None
+
+    def disable_time(self):
+        """Disable time."""
+        self.time = None
 
 
 class Networkx(Graph):

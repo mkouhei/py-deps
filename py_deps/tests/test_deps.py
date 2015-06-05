@@ -106,14 +106,23 @@ class WheelTests(unittest.TestCase):
 
     def test_linkdraw(self):
         """Linkdraw test."""
-        data = json.loads(self.pkg.draw('linkdraw'))
-        data['time'] = None
+        data = self.pkg.draw('linkdraw', decode_type='json')
+        self.assertIsNotNone(data['time'])
+        self.assertIsNotNone(data['descr'])
+
+        data = self.pkg.draw('linkdraw', decode_type='json',
+                             disable_time=True)
+        self.assertIsNone(data['time'])
+        self.assertIsNotNone(data['descr'])
+
+        data = self.pkg.draw('linkdraw', decode_type='json',
+                             disable_descr=True)
+        self.assertIsNotNone(data['time'])
+        self.assertIsNone(data['descr'])
+
+        data = json.loads(self.pkg.draw('linkdraw', disable_time=True))
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
-
-        data_decoded = self.pkg.draw('linkdraw', decode_type='json')
-        data_decoded['time'] = None
-        self.assertEqual(data_decoded, self.linkdraw)
 
     def test_networkx(self):
         """Networkx test."""
@@ -167,14 +176,23 @@ class WheelDeprecatedTests(unittest.TestCase):
 
     def test_linkdraw(self):
         """Linkdraw test."""
-        data = json.loads(self.pkg.draw('linkdraw'))
-        data['time'] = None
+        data = self.pkg.draw('linkdraw', decode_type='json')
+        self.assertIsNotNone(data['time'])
+        self.assertIsNotNone(data['descr'])
+
+        data = self.pkg.draw('linkdraw', decode_type='json',
+                             disable_time=True)
+        self.assertIsNone(data['time'])
+        self.assertIsNotNone(data['descr'])
+
+        data = self.pkg.draw('linkdraw', decode_type='json',
+                             disable_descr=True)
+        self.assertIsNotNone(data['time'])
+        self.assertIsNone(data['descr'])
+
+        data = json.loads(self.pkg.draw('linkdraw', disable_time=True))
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
-
-        data_decoded = self.pkg.draw('linkdraw', decode_type='json')
-        data_decoded['time'] = None
-        self.assertEqual(data_decoded, self.linkdraw)
 
     def test_networkx(self):
         """Networkx test."""
@@ -228,14 +246,23 @@ class EggTests(unittest.TestCase):
 
     def test_linkdraw(self):
         """Linkdraw test."""
-        data = json.loads(self.pkg.draw('linkdraw'))
-        data['time'] = None
+        data = self.pkg.draw('linkdraw', decode_type='json')
+        self.assertIsNotNone(data['time'])
+        self.assertIsNotNone(data['descr'])
+
+        data = self.pkg.draw('linkdraw', decode_type='json',
+                             disable_time=True)
+        self.assertIsNone(data['time'])
+        self.assertIsNotNone(data['descr'])
+
+        data = self.pkg.draw('linkdraw', decode_type='json',
+                             disable_descr=True)
+        self.assertIsNotNone(data['time'])
+        self.assertIsNone(data['descr'])
+
+        data = json.loads(self.pkg.draw('linkdraw', disable_time=True))
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
-
-        data_decoded = self.pkg.draw('linkdraw', decode_type='json')
-        data_decoded['time'] = None
-        self.assertEqual(data_decoded, self.linkdraw)
 
     def test_networkx(self):
         """Networkx test."""
