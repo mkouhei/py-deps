@@ -12,9 +12,9 @@ from py_deps import deps
 
 
 @patch('pip.req.RequirementSet.prepare_files')
-def prepare(pkg_name, meta_type, cache, _mock):
+def prepare(pkg_name, version, meta_type, cache, _mock):
     """Prepare package object."""
-    pkg = deps.Package(pkg_name)
+    pkg = deps.Package(pkg_name, version)
     for meta in glob('py_deps/tests/data/meta/%s/*' % meta_type):
         shutil.copytree(meta,
                         os.path.join(pkg.tempdir,
@@ -84,7 +84,7 @@ class WheelTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('swiftsc', 'wheel', self.container)
+        self.pkg = prepare('swiftsc', '0.6.5', 'wheel', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -98,7 +98,7 @@ class WheelTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('swiftsc',
+        pkg_cache = deps.Package('swiftsc', '0.6.5',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
@@ -154,7 +154,8 @@ class WheelDeprecatedTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('iso8601', 'wheel-deprecated', self.container)
+        self.pkg = prepare('iso8601', '0.1.10',
+                           'wheel-deprecated', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -168,7 +169,7 @@ class WheelDeprecatedTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('iso8601',
+        pkg_cache = deps.Package('iso8601', '0.1.10',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
@@ -224,7 +225,7 @@ class EggTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('py-deps', 'egg', self.container)
+        self.pkg = prepare('py-deps', '0.4.5', 'egg', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -238,7 +239,7 @@ class EggTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('py-deps',
+        pkg_cache = deps.Package('py-deps', '0.4.5',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
