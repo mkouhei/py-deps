@@ -84,7 +84,7 @@ class WheelTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('py-deps', 'wheel', self.container)
+        self.pkg = prepare('swiftsc', 'wheel', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -98,11 +98,11 @@ class WheelTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('py-deps',
+        pkg_cache = deps.Package('swiftsc',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('py-deps')), 4)
+        self.assertEqual(len(self.container.list_data().get('swiftsc')), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -126,8 +126,8 @@ class WheelTests(unittest.TestCase):
 
     def test_networkx(self):
         """Networkx test."""
-        self.assertEqual(len(self.pkg.draw('networkx').nodes()), 20)
-        self.assertEqual(len(self.pkg.draw('networkx').edges()), 21)
+        self.assertEqual(len(self.pkg.draw('networkx').nodes()), 13)
+        self.assertEqual(len(self.pkg.draw('networkx').edges()), 12)
 
     def test_cleanup_all(self):
         """Cleanup tests."""
@@ -224,7 +224,7 @@ class EggTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('swiftsc', 'egg', self.container)
+        self.pkg = prepare('py-deps', 'egg', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -238,11 +238,11 @@ class EggTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('swiftsc',
+        pkg_cache = deps.Package('py-deps',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('swiftsc')), 4)
+        self.assertEqual(len(self.container.list_data().get('py-deps')), 6)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -266,8 +266,8 @@ class EggTests(unittest.TestCase):
 
     def test_networkx(self):
         """Networkx test."""
-        self.assertEqual(len(self.pkg.draw('networkx').nodes()), 11)
-        self.assertEqual(len(self.pkg.draw('networkx').edges()), 10)
+        self.assertEqual(len(self.pkg.draw('networkx').nodes()), 21)
+        self.assertEqual(len(self.pkg.draw('networkx').edges()), 22)
 
     def test_cleanup_all(self):
         """Cleanup tests."""
