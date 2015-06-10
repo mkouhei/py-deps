@@ -1,6 +1,11 @@
 History
 =======
 
+0.4.6 (2015-06-11)
+------------------
+
+* Fixes not control the version of package correctly.
+
 0.4.5 (2015-06-07)
 ------------------
 

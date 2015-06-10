@@ -69,6 +69,14 @@ on current working directory.This file format is
     >>> from py_deps import Package
     >>> pkg = Package('py-deps')
 
+py-deps retrieve latest version from PyPI
+without ``version`` argument as above.
+Specify version use version argument.::
+
+    >>> pkg = Package('py-deps', version='0.3.0')
+    >>> pkg.version
+    0.3.0
+
 
 Change cache file
 ~~~~~~~~~~~~~~~~~
