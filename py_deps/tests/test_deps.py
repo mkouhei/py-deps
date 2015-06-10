@@ -20,7 +20,7 @@ def prepare(pkg_name, version, meta_type, cache, _mock):
                         os.path.join(pkg.tempdir,
                                      os.path.basename(meta)))
     pkg.trace_chain()
-    cache.store_data(pkg_name, pkg.traced_chain)
+    cache.store_data((pkg_name, version), pkg.traced_chain)
     return pkg
 
 
@@ -102,7 +102,8 @@ class WheelTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('swiftsc')), 4)
+        self.assertEqual(len(self.container.list_data()
+                             .get(('swiftsc', '0.6.5'))), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -173,7 +174,8 @@ class WheelDeprecatedTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('iso8601')), 1)
+        self.assertEqual(len(self.container.list_data()
+                             .get(('iso8601', '0.1.10'))), 1)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -243,7 +245,8 @@ class EggTests(unittest.TestCase):
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('py-deps')), 6)
+        self.assertEqual(len(self.container.list_data()
+                             .get(('py-deps', '0.4.5'))), 6)
 
     def test_linkdraw(self):
         """Linkdraw test."""
