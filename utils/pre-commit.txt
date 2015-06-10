@@ -1,9 +1,10 @@
 #!/bin/sh -e
 
 rootdir=$(git rev-parse --show-toplevel)
-cd $rootdir
 (
-find ./ -name '*.pyc' -delete
-tox
-python setup.py check -r
+    cd $rootdir
+    rm -rf dist .cache *.egg-info _build
+    find ./ -name '*.pyc' -delete
+    tox
+    python setup.py check -r
 )
