@@ -63,14 +63,14 @@ class Container(object):
         :rtype: list
         :return: dependency chain list
 
-        :param tuple key: package name, version
+        :param str key: package name
         """
         return self.container.get(key)
 
     def store_data(self, key, data):
         """Store traced_chain data.
 
-        :param tuple key: package name, version
+        :param str key: package name
         :param list data: traced dependency chain data
         """
         self.container[key] = data
@@ -85,7 +85,6 @@ class Container(object):
         return self.container
 
 
-# pylint: disable=too-many-instance-attributes
 class Package(object):
 
     """Package class."""
@@ -93,17 +92,15 @@ class Package(object):
     #: index_url
     index_url = 'https://pypi.python.org/simple'
 
-    def __init__(self, name, version=None,
-                 cache_name=None, update_force=False):
+    def __init__(self, name, cache_name=None, update_force=False):
         """Initialize to parsing dependencies of package."""
         #: package name
         self.name = name
-        self.version = version
         cache = Container(cache_name)
         self.container = cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
-        if cache.read_data((name, self.version)) is None or update_force:
+        if cache.read_data(name) is None or update_force:
 
             self.finder = PackageFinder(find_links=[],
                                         index_urls=[self.index_url],
@@ -115,17 +112,15 @@ class Package(object):
                                          ignore_installed=True,
                                          session=PipSession())
 
-            if self.version:
-                name = '%s==%s' % (name, self.version)
             req = InstallRequirement.from_line(name,
                                                comes_from=None)
             self.reqset.add_requirement(req)
             self.requires = []
             self.traced_chain = []
             self.trace_chain()
-            cache.store_data((self.name, self.version), self.traced_chain)
+            cache.store_data(name, self.traced_chain)
         else:
-            self.traced_chain = cache.read_data((self.name, self.version))
+            self.traced_chain = cache.read_data(name)
             self.cleanup()
 
     @classmethod
