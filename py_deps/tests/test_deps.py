@@ -12,15 +12,15 @@ from py_deps import deps
 
 
 @patch('pip.req.RequirementSet.prepare_files')
-def prepare(pkg_name, meta_type, cache, _mock):
+def prepare(pkg_name, version, meta_type, cache, _mock):
     """Prepare package object."""
-    pkg = deps.Package(pkg_name)
+    pkg = deps.Package(pkg_name, version)
     for meta in glob('py_deps/tests/data/meta/%s/*' % meta_type):
         shutil.copytree(meta,
                         os.path.join(pkg.tempdir,
                                      os.path.basename(meta)))
     pkg.trace_chain()
-    cache.store_data(pkg_name, pkg.traced_chain)
+    cache.store_data((pkg_name, version), pkg.traced_chain)
     return pkg
 
 
@@ -84,7 +84,7 @@ class WheelTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('py-deps', 'wheel', self.container)
+        self.pkg = prepare('py-deps', '0.2.0', 'wheel', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -98,11 +98,12 @@ class WheelTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('py-deps',
+        pkg_cache = deps.Package('py-deps', '0.2.0',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('py-deps')), 4)
+        self.assertEqual(len(self.container.list_data()
+                             .get(('py-deps', '0.2.0'))), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -154,7 +155,8 @@ class WheelDeprecatedTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('iso8601', 'wheel-deprecated', self.container)
+        self.pkg = prepare('iso8601', '0.1.10',
+                           'wheel-deprecated', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -168,11 +170,12 @@ class WheelDeprecatedTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('iso8601',
+        pkg_cache = deps.Package('iso8601', '0.1.10',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('iso8601')), 1)
+        self.assertEqual(len(self.container.list_data()
+                             .get(('iso8601', '0.1.10'))), 1)
 
     def test_linkdraw(self):
         """Linkdraw test."""
@@ -224,7 +227,7 @@ class EggTests(unittest.TestCase):
 
         deps.DEFAULT_CACHE_NAME = self.cache
         self.container = deps.Container(self.cache)
-        self.pkg = prepare('swiftsc', 'egg', self.container)
+        self.pkg = prepare('swiftsc', '0.6.3', 'egg', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
@@ -238,11 +241,12 @@ class EggTests(unittest.TestCase):
                          self.pretty_print)
 
         # cache test
-        pkg_cache = deps.Package('swiftsc',
+        pkg_cache = deps.Package('swiftsc', '0.6.3',
                                  cache_name=self.cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
-        self.assertEqual(len(self.container.list_data().get('swiftsc')), 4)
+        self.assertEqual(len(self.container.list_data()
+                             .get(('swiftsc', '0.6.3'))), 4)
 
     def test_linkdraw(self):
         """Linkdraw test."""
