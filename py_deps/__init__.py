@@ -234,7 +234,7 @@ Listing cached data with the ``list_data`` method of :class:`Container`.::
 Read the cached package with ``read_data`` method of :class:`Container`.
 This method returns :class:`Package.traced_chain`.
 
-    >>> Container().read_data('py-deps')
+    >>> Container().read_data(('py-deps', '0.3.0'))
     [py-deps, setuptools, pip, wheel, networkx, decorator]
 
 
