@@ -9,10 +9,11 @@ import json
 from glob import glob
 from mock import patch
 from py_deps import deps
+from py_deps import cache
 
 
 @patch('pip.req.RequirementSet.prepare_files')
-def prepare(pkg_name, version, meta_type, cache, _mock):
+def prepare(pkg_name, version, meta_type, cache_obj, _mock):
     """Prepare package object."""
     pkg = deps.Package(pkg_name, version)
     for meta in glob('py_deps/tests/data/meta/%s/*' % meta_type):
@@ -20,7 +21,7 @@ def prepare(pkg_name, version, meta_type, cache, _mock):
                         os.path.join(pkg.tempdir,
                                      os.path.basename(meta)))
     pkg.trace_chain()
-    cache.store_data((pkg_name, version), pkg.traced_chain)
+    cache_obj.store_data((pkg_name, version), pkg.traced_chain)
     return pkg
 
 
@@ -71,7 +72,7 @@ class WheelTests(unittest.TestCase):
 
     """Test of Package class."""
 
-    cache = 'py-deps.tests'
+    test_cache = 'py-deps.tests'
 
     def setUp(self):
         """Initialize."""
@@ -82,15 +83,15 @@ class WheelTests(unittest.TestCase):
         with open('py_deps/tests/data/wheel.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        deps.DEFAULT_CACHE_NAME = self.cache
-        self.container = deps.Container(self.cache)
+        cache.DEFAULT_CACHE_NAME = self.test_cache
+        self.container = cache.Container(self.test_cache)
         self.pkg = prepare('py-deps', '0.2.0', 'wheel', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove(deps.DEFAULT_CACHE_NAME)
+        os.remove(cache.DEFAULT_CACHE_NAME)
 
     def test_pretty_print(self):
         """Pretty print test."""
@@ -99,7 +100,7 @@ class WheelTests(unittest.TestCase):
 
         # cache test
         pkg_cache = deps.Package('py-deps', '0.2.0',
-                                 cache_name=self.cache)
+                                 cache_name=self.test_cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
         self.assertEqual(len(self.container.list_data()
@@ -142,7 +143,7 @@ class WheelDeprecatedTests(unittest.TestCase):
 
     """Test of Package class for old style wheel."""
 
-    cache = 'py-deps.tests'
+    test_cache = 'py-deps.tests'
 
     def setUp(self):
         """Initialize."""
@@ -153,8 +154,8 @@ class WheelDeprecatedTests(unittest.TestCase):
         with open('py_deps/tests/data/wheel-deprecated.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        deps.DEFAULT_CACHE_NAME = self.cache
-        self.container = deps.Container(self.cache)
+        cache.DEFAULT_CACHE_NAME = self.test_cache
+        self.container = cache.Container(self.test_cache)
         self.pkg = prepare('iso8601', '0.1.10',
                            'wheel-deprecated', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
@@ -162,7 +163,7 @@ class WheelDeprecatedTests(unittest.TestCase):
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove(deps.DEFAULT_CACHE_NAME)
+        os.remove(cache.DEFAULT_CACHE_NAME)
 
     def test_pretty_print(self):
         """Pretty print test."""
@@ -171,7 +172,7 @@ class WheelDeprecatedTests(unittest.TestCase):
 
         # cache test
         pkg_cache = deps.Package('iso8601', '0.1.10',
-                                 cache_name=self.cache)
+                                 cache_name=self.test_cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
         self.assertEqual(len(self.container.list_data()
@@ -214,7 +215,7 @@ class EggTests(unittest.TestCase):
 
     """Test of Package class."""
 
-    cache = 'py-deps.tests'
+    test_cache = 'py-deps.tests'
 
     def setUp(self):
         """Initialize."""
@@ -225,15 +226,15 @@ class EggTests(unittest.TestCase):
         with open('py_deps/tests/data/egg.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        deps.DEFAULT_CACHE_NAME = self.cache
-        self.container = deps.Container(self.cache)
+        cache.DEFAULT_CACHE_NAME = self.test_cache
+        self.container = cache.Container(self.test_cache)
         self.pkg = prepare('swiftsc', '0.6.3', 'egg', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove(deps.DEFAULT_CACHE_NAME)
+        os.remove(cache.DEFAULT_CACHE_NAME)
 
     def test_pretty_print(self):
         """Pretty print test."""
@@ -242,7 +243,7 @@ class EggTests(unittest.TestCase):
 
         # cache test
         pkg_cache = deps.Package('swiftsc', '0.6.3',
-                                 cache_name=self.cache)
+                                 cache_name=self.test_cache)
         self.assertEqual(pkg_cache.draw(),
                          self.pretty_print)
         self.assertEqual(len(self.container.list_data()

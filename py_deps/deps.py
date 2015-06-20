@@ -12,8 +12,7 @@ from pip.locations import src_prefix
 from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
-import pickle
-from py_deps import graph
+from py_deps import graph, cache
 from py_deps.exceptions import NotFound, BrokenPackage
 from py_deps.logger import trace_log
 if pip.__version__ >= '6.0.0':
@@ -28,61 +27,7 @@ else:
 
 #: suffix of temporary directory name
 SUFFIX = '-py_deps'
-#: default cache file name
-DEFAULT_CACHE_NAME = 'py-deps.pickle'
 PYPI_URL = 'https://pypi.python.org/pypi'
-
-
-class Container(object):
-
-    """Package container class."""
-
-    def __init__(self, cache_name=None):
-        """Initialize."""
-        if cache_name:
-            self.cache_name = cache_name
-        else:
-            self.cache_name = DEFAULT_CACHE_NAME
-        self.container = {}
-        self.load_cache()
-
-    def load_cache(self):
-        """Load cache file."""
-        if os.path.isfile(self.cache_name):
-            with open(self.cache_name, 'rb') as fobj:
-                self.container = pickle.load(fobj)
-
-    def save_cache(self):
-        """Save cache file."""
-        with open(self.cache_name, 'wb') as fobj:
-            pickle.dump(self.container, fobj)
-
-    def read_data(self, key):
-        """Read traced_chain data.
-
-        :rtype: list
-        :return: dependency chain list
-
-        :param tuple key: package name, version
-        """
-        return self.container.get(key)
-
-    def store_data(self, key, data):
-        """Store traced_chain data.
-
-        :param tuple key: package name, version
-        :param list data: traced dependency chain data
-        """
-        self.container[key] = data
-        self.save_cache()
-
-    def list_data(self):
-        """Return dictionary stored package metadata.
-
-        :rtype: dict
-        :return: packages metadata
-        """
-        return self.container
 
 
 # pylint: disable=too-many-instance-attributes
@@ -99,11 +44,11 @@ class Package(object):
         #: package name
         self.name = name
         self.version = version
-        cache = Container(cache_name)
-        self.container = cache.container
+        _cache = cache.Container(cache_name)
+        self.container = _cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
-        if cache.read_data((name, self.version)) is None or update_force:
+        if _cache.read_data((name, self.version)) is None or update_force:
 
             self.finder = PackageFinder(find_links=[],
                                         index_urls=[self.index_url],
@@ -123,9 +68,9 @@ class Package(object):
             self.requires = []
             self.traced_chain = []
             self.trace_chain()
-            cache.store_data((self.name, self.version), self.traced_chain)
+            _cache.store_data((self.name, self.version), self.traced_chain)
         else:
-            self.traced_chain = cache.read_data((self.name, self.version))
+            self.traced_chain = _cache.read_data((self.name, self.version))
             self.cleanup()
 
     @classmethod

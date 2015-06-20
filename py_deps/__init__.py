@@ -239,4 +239,5 @@ This method returns :class:`Package.traced_chain`.
 
 
 """
-from py_deps.deps import Package, Container  # silence pyflakes
+from py_deps.deps import Package  # silence pyflakes
+from py_deps.cache import Container  # silence pyflakes
