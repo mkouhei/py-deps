@@ -14,3 +14,8 @@
    :members:
    :show-inheritance:
    :inherited-members:
+
+.. automodule:: py_deps.cache
+   :members:
+   :show-inheritance:
+   :inherited-members:
