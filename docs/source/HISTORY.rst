@@ -1,6 +1,11 @@
 History
 =======
 
+0.5.0 (2015-06-22)
+------------------
+
+* Supports memcached as the backend of cache.
+
 0.4.6 (2015-06-11)
 ------------------
 
