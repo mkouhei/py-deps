@@ -38,13 +38,12 @@ class Package(object):
     #: index_url
     index_url = 'https://pypi.python.org/simple'
 
-    def __init__(self, name, version=None,
-                 cache_name=None, update_force=False):
+    def __init__(self, name, version=None, update_force=False, **kwargs):
         """Initialize to parsing dependencies of package."""
         #: package name
         self.name = name
         self.version = version
-        _cache = cache.Container(cache_name)
+        _cache = cache.backend(**kwargs)
         self.container = _cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 

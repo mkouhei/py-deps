@@ -75,6 +75,7 @@ requires = ['setuptools',
             'networkx']
 extras_require = {
     'reST': ['Sphinx'],
+    'memcache': ['pylibmc'],
     }
 if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')

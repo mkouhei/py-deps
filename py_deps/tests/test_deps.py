@@ -83,15 +83,15 @@ class WheelTests(unittest.TestCase):
         with open('py_deps/tests/data/wheel.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        cache.DEFAULT_CACHE_NAME = self.test_cache
-        self.container = cache.Container(self.test_cache)
+        cache.Pickle.default_cache_name = self.test_cache
+        self.container = cache.backend(cache_name=self.test_cache)
         self.pkg = prepare('py-deps', '0.2.0', 'wheel', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove(cache.DEFAULT_CACHE_NAME)
+        os.remove(cache.Pickle.default_cache_name)
 
     def test_pretty_print(self):
         """Pretty print test."""
@@ -154,8 +154,8 @@ class WheelDeprecatedTests(unittest.TestCase):
         with open('py_deps/tests/data/wheel-deprecated.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        cache.DEFAULT_CACHE_NAME = self.test_cache
-        self.container = cache.Container(self.test_cache)
+        cache.Pickle.default_cache_name = self.test_cache
+        self.container = cache.backend(cache_name=self.test_cache)
         self.pkg = prepare('iso8601', '0.1.10',
                            'wheel-deprecated', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
@@ -163,7 +163,7 @@ class WheelDeprecatedTests(unittest.TestCase):
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove(cache.DEFAULT_CACHE_NAME)
+        os.remove(cache.Pickle.default_cache_name)
 
     def test_pretty_print(self):
         """Pretty print test."""
@@ -226,15 +226,15 @@ class EggTests(unittest.TestCase):
         with open('py_deps/tests/data/egg.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
-        cache.DEFAULT_CACHE_NAME = self.test_cache
-        self.container = cache.Container(self.test_cache)
+        cache.Pickle.default_cache_name = self.test_cache
+        self.container = cache.backend(cache_name=self.test_cache)
         self.pkg = prepare('swiftsc', '0.6.3', 'egg', self.container)
         self.tempdir = tempfile.mkdtemp(suffix=deps.SUFFIX)
 
     def tearDown(self):
         """Clean up test."""
         self.pkg.cleanup()
-        os.remove(cache.DEFAULT_CACHE_NAME)
+        os.remove(cache.Pickle.default_cache_name)
 
     def test_pretty_print(self):
         """Pretty print test."""
