@@ -94,6 +94,21 @@ Use ``update_force`` argument. (default: ``False``)::
     >>> pkg = Package('py-deps', update_force=True)
 
 
+Changes the cache backend to Memcached
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installing libmemcached-dev package and pylibmc.::
+
+    $ sudo apt-get install libmemcached-dev
+    $ . /path/to/venv/bin/activate
+    (venv)$ cd /path/to/py-deps
+    (venv)$ python setup.py memcache
+
+Use ``servers`` argument. The argment syntax follows pylibmc.Client.::
+
+    >>> pkg = Package('py-deps', servers=['127.0.0.1:11211'])
+
+
 Generate rendering data
 -----------------------
 

@@ -27,7 +27,8 @@ Requirements
 * pip 1.5.6 or 6.1.1 over
 * wheel 0.24.0 over
 * NetworkX 1.9 over
-  
+* pylibmc 1.4.3 over (optional)
+
 Features
 ========
 
