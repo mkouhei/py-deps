@@ -44,7 +44,8 @@ class Package(object):
         #: package name
         self.name = name
         self.version = version
-        _cache = cache.Container(cache_name)
+        # _cache = cache.Container(cache_name)
+        _cache = cache.backend(cache_name=cache_name)
         self.container = _cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
 
