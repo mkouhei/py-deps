@@ -2,19 +2,42 @@
 """py_deps.cache module."""
 import os.path
 import pickle
+try:
+    import pylibmc
+except ImportError:
+    pass
 
 
-#: default cache file name
-DEFAULT_CACHE_NAME = 'py-deps.pickle'
+def backend(**kwargs):
+    """Specify cache backend.
 
+    :rtype: :class:`py_deps.cache.Container`
+    :return: Pickle object or Memcached object.
 
-def backend(backend_type=None, cache_name=None):
-    """Specify cache backend."""
-    if backend_type == 'memcached':
-        pass
+    :param **kwargs: parameters
+
+    servers
+        Memcached servers (required in Memcached)
+
+        Required when Memcached. Using Pickle in default without ``servers``.
+
+    username
+        Memcached SASL username (optional)
+
+    password
+        Memcached SASL password (optional)
+
+    cache_name
+        Pickle filename (default, optional)
+    """
+    if kwargs.get('servers'):
+        return Memcached(kwargs.get('servers'),
+                         username=kwargs.get('username'),
+                         password=kwargs.get('password'),
+                         behaviors=kwargs.get('behaviors'))
     else:
         # default Pickle
-        return Pickle(cache_name=cache_name)
+        return Pickle(cache_name=kwargs.get('cache_name'))
 
 
 class Container(object):
@@ -25,14 +48,9 @@ class Container(object):
         """Initialize."""
         self.cache_name = cache_name
         self.container = {}
-        self.load_cache()
 
-    def load_cache(self):
-        """Load cache."""
-        pass
-
-    def save_cache(self):
-        """Save cache."""
+    def store_data(self, key, data):
+        """store traced_chain data."""
         pass
 
     def read_data(self, key):
@@ -44,15 +62,6 @@ class Container(object):
         :param tuple key: package name, version
         """
         return self.container.get(key)
-
-    def store_data(self, key, data):
-        """Store traced_chain data.
-
-        :param tuple key: package name, version
-        :param list data: traced dependency chain data
-        """
-        self.container[key] = data
-        self.save_cache()
 
     def list_data(self):
         """Return dictionary stored package metadata.
@@ -75,6 +84,7 @@ class Pickle(Container):
         if cache_name is None:
             cache_name = self.default_cache_name
         super(Pickle, self).__init__(cache_name)
+        self.load_cache()
 
     def load_cache(self):
         """Load cache file."""
@@ -86,3 +96,51 @@ class Pickle(Container):
         """Save cache file."""
         with open(self.cache_name, 'wb') as fobj:
             pickle.dump(self.container, fobj)
+
+    def store_data(self, key, data):
+        """Store traced_chain data.
+
+        :param tuple key: package name, version
+        :param list data: traced dependency chain data
+        """
+        self.container[key] = data
+        self.save_cache()
+
+
+class Memcached(Container):
+
+    """Cache backend is Memecached."""
+
+    def __init__(self, servers=None,
+                 username=None,
+                 password=None,
+                 behaviors=None):
+        """Initialize."""
+        super(Memcached, self).__init__()
+        if username and password:
+            self.container = pylibmc.Client(servers,
+                                            binary=True,
+                                            username=username,
+                                            password=password)
+        else:
+            self.container = pylibmc.Client(servers,
+                                            binary=True)
+
+    def store_data(self, key, data):
+        """Store traced_chain data.
+
+        :param tuple key: package name, version
+        :param list data: traced dependency chain data
+        """
+        # pylint: disable=no-member
+        self.container.set('{0} {1}'.format(*key), data)
+
+    def read_data(self, key):
+        """Read traced_chain data.
+
+        :rtype: list
+        :return: dependency chain list
+
+        :param tuple key: package name, version
+        """
+        return self.container.get('{0} {1}'.format(*key))
