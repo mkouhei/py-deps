@@ -50,7 +50,7 @@ Workaround
 
 The workaround for this problem is to use `setuptools <http://pythonhosted.org/setuptools/>`_ instead of ``pip``.
 
-* You should use the ``easy_install`` command when you are installing the X from `PyPI <https://pypi.python.org/pypi>`_.
+* You should use the ``easy_install`` or ``pip install --no-use-wheel`` command when you are installing the X from `PyPI <https://pypi.python.org/pypi>`_.
 * Use the ``python setup.py install`` when you install from the source tree , such as repository.
 * When you use the `Tox <https://testrun.org/tox/latest/>`_ in unit test , you should specify `install_command <https://testrun.org/tox/latest/example/basic.html?highlight=install_command#further-customizing-installation>`_ in ``[testenv]`` section of ``tox.ini``.::
 
