@@ -60,7 +60,7 @@ class Package(object):
                                          session=PipSession())
 
             if self.version:
-                name = '%s==%s' % (name, self.version)
+                name = '{0}=={1}'.format(name, self.version)
             req = InstallRequirement.from_line(name,
                                                comes_from=None)
             self.reqset.add_requirement(req)

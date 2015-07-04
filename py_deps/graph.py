@@ -34,7 +34,7 @@ def pretty_print(chain_data):
     """
     lines = ''
     for node in chain_data:
-        lines += '%s -> %s\n' % (node, node.targets)
+        lines += '{0} -> {1}\n'.format(node, node.targets)
     return lines.rstrip()
 
 

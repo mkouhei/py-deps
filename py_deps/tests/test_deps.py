@@ -16,7 +16,7 @@ from py_deps import cache
 def prepare(pkg_name, version, meta_type, cache_obj, _mock):
     """Prepare package object."""
     pkg = deps.Package(pkg_name, version)
-    for meta in glob('py_deps/tests/data/meta/%s/*' % meta_type):
+    for meta in glob('py_deps/tests/data/meta/{0}/*'.format(meta_type)):
         shutil.copytree(meta,
                         os.path.join(pkg.tempdir,
                                      os.path.basename(meta)))
