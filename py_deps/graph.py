@@ -122,7 +122,7 @@ class Linkdraw(Graph):
     def __init__(self, chain_data):
         """Initialize."""
         super(Linkdraw, self).__init__(chain_data)
-        self.descr = "%s dependencies" % chain_data[0].name
+        self.descr = "{0} dependencies".format(chain_data[0].name)
         self.time = datetime.utcnow().isoformat()
 
     def generate_edges(self):

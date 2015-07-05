@@ -98,9 +98,10 @@ class Package(object):
         :rtype: None
         """
         if alldir:
-            for tempdir in glob("%s/tmp*%s" % (os.path.dirname(self.tempdir),
-                                               SUFFIX)):
-                rmtree(tempdir, ignore_errors=True)
+            [rmtree(tempdir, ignore_errors=True)
+             for tempdir in
+             glob("{0}/tmp*{1}".format(os.path.dirname(self.tempdir),
+                                       SUFFIX))]
         else:
             rmtree(self.tempdir, ignore_errors=True)
 
@@ -168,7 +169,7 @@ class Package(object):
                     if pat.search(f)]
 
         if 'pip-egg-info' in egg_dirs:
-            eggs = glob('%s/*' % os.path.join(pkg_dir, 'pip-egg-info'))
+            eggs = glob('{0}/*'.format(os.path.join(pkg_dir, 'pip-egg-info')))
             metadata = self._parse_egg_info(eggs[0])
         else:
             dist_info = os.path.join(pkg_dir, egg_dirs[0])

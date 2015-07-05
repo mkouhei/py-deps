@@ -135,7 +135,8 @@ class WheelTests(unittest.TestCase):
         """Cleanup tests."""
         self.pkg.cleanup(alldir=True)
         self.assertListEqual(
-            glob('%s/tmp*%s' % (os.path.dirname(self.tempdir), deps.SUFFIX)),
+            glob('{0}/tmp*{1}'.format(os.path.dirname(self.tempdir),
+                                      deps.SUFFIX)),
             [])
 
 
@@ -207,7 +208,8 @@ class WheelDeprecatedTests(unittest.TestCase):
         """Cleanup tests."""
         self.pkg.cleanup(alldir=True)
         self.assertListEqual(
-            glob('%s/tmp*%s' % (os.path.dirname(self.tempdir), deps.SUFFIX)),
+            glob('{0}/tmp*{1}'.format(os.path.dirname(self.tempdir),
+                                      deps.SUFFIX)),
             [])
 
 
@@ -278,5 +280,6 @@ class EggTests(unittest.TestCase):
         """Cleanup tests."""
         self.pkg.cleanup(alldir=True)
         self.assertListEqual(
-            glob('%s/tmp*%s' % (os.path.dirname(self.tempdir), deps.SUFFIX)),
+            glob('{0}/tmp*{1}'.format(os.path.dirname(self.tempdir),
+                                      deps.SUFFIX)),
             [])
