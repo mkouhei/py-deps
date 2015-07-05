@@ -60,7 +60,7 @@ class Graph(object):
                               color=self.default_color,
                               version=metadata.version,
                               link=self._normalize_url(metadata.url)))
-        if len(node.targets) > 0:
+        if node.targets:
             for target in node.targets:
                 if self._check_node(target, nodes):
                     metadata = self._get_metadata(target.name)
@@ -72,11 +72,11 @@ class Graph(object):
 
     def _check_node(self, node, nodes):
         """Check appended node."""
-        if len([_node for _node in nodes
-                if _node['name'] == self._normalize_name(node.name)]) == 0:
-            return True
-        else:
+        if ([_node for _node in nodes
+             if _node['name'] == self._normalize_name(node.name)]):
             return False
+        else:
+            return True
 
     def generate_nodes(self):
         """Generate nodes data."""

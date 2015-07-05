@@ -142,13 +142,12 @@ class Package(object):
             pkg_name = self.name
         pkg = [req for req in self._list_requires()
                if u2h(req.name) == u2h(pkg_name)]
-        if len(pkg) == 0:
-            return
-        if pkg[0] not in self.traced_chain:
-            self.traced_chain.append(pkg[0])
-        if len(pkg[0].targets) > 0:
-            for target in pkg[0].targets:
-                self.trace_chain(target.name)
+        if pkg:
+            if pkg[0] not in self.traced_chain:
+                self.traced_chain.append(pkg[0])
+            if pkg[0].targets:
+                for target in pkg[0].targets:
+                    self.trace_chain(target.name)
 
     def _collect_requires(self):
         """Collect requires object or dict object."""
