@@ -30,6 +30,24 @@ SUFFIX = '-py_deps'
 PYPI_URL = 'https://pypi.python.org/pypi'
 
 
+def search(pkg_name, exactly=False):
+    """Search package.
+
+    :rtype: list
+    :return: search packages
+
+    :param str pkg_name: package name.
+    :param bool exactly: exactly match only.
+    """
+    client = xmlrpclib.ServerProxy(PYPI_URL)
+    result = client.search({'name': pkg_name})
+    if exactly:
+        return [pkg for pkg in result
+                if u2h(pkg.get('name')) == u2h(pkg_name)]
+    else:
+        return result
+
+
 # pylint: disable=too-many-instance-attributes
 class Package(object):
 
@@ -71,24 +89,6 @@ class Package(object):
         else:
             self.traced_chain = _cache.read_data((self.name, self.version))
             self.cleanup()
-
-    @classmethod
-    def search(cls, pkg_name, exactly=False):
-        """Search package.
-
-        :rtype: list
-        :return: search packages
-
-        :param str pkg_name: package name.
-        :param bool exactly: exactly match only.
-        """
-        client = xmlrpclib.ServerProxy(PYPI_URL)
-        result = client.search({'name': pkg_name})
-        if exactly:
-            return [pkg for pkg in result
-                    if u2h(pkg.get('name')) == u2h(pkg_name)]
-        else:
-            return result
 
     def cleanup(self, alldir=False):
         """Cleanup temporary build directory.

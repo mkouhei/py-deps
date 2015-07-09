@@ -6,8 +6,8 @@ Search packages
 Search packages from PyPI.::
 
     $ python
-    >>> from py_deps import Package
-    >>> Package.search('deps')
+    >>> from py_deps import search
+    >>> search('deps')
     [{'_pypi_ordering': False,
       'name': 'anybox.recipe.sysdeps',
       'summary': 'A buildout recipe to check system dependencies',
