@@ -147,7 +147,12 @@ class Package(object):
                 self.traced_chain.append(pkg[0])
             if pkg[0].targets:
                 for target in pkg[0].targets:
-                    self.trace_chain(target.name)
+                    if self._is_exist(target.name) is False:
+                        self.trace_chain(target.name)
+
+    def _is_exist(self, pkg_name):
+        """Check package name in traced_chain."""
+        return pkg_name in [node.name for node in self.traced_chain]
 
     def _collect_requires(self):
         """Collect requires object or dict object."""
