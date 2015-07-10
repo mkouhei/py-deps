@@ -3,7 +3,7 @@
 rootdir=$(git rev-parse --show-toplevel)
 (
     cd $rootdir
-    rm -rf dist .cache *.egg-info _build
+    rm -rf dist .cache *.egg-info _build py-deps.tests
     find ./ -name '*.pyc' -delete
     tox
     python setup.py check -r
