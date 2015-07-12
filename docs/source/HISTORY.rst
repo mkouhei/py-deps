@@ -1,6 +1,15 @@
 History
 =======
 
+0.5.1 (2015-07-12)
+------------------
+
+* Changes Package.search method to a function.
+* Fixes infinity loop trace_chain.
+* Fixes `None` redundant second argument of `dict.get()`.
+* Fixes `len()` used to check if collection has items.
+* Fixes old-style string formatting.
+
 0.5.0 (2015-06-22)
 ------------------
 
