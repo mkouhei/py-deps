@@ -64,6 +64,7 @@ class Package(object):
         _cache = cache.backend(**kwargs)
         self.container = _cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
+        self.depth = Depth()
 
         if _cache.read_data((name, self.version)) is None or update_force:
 
@@ -140,14 +141,17 @@ class Package(object):
         """
         if pkg_name is None:
             pkg_name = self.name
-        pkg = [req for req in self._list_requires()
-               if u2h(req.name) == u2h(pkg_name)]
-        if pkg:
-            if pkg[0] not in self.traced_chain:
-                self.traced_chain.append(pkg[0])
-            if pkg[0].targets:
-                for target in pkg[0].targets:
+        pkgs = [req for req in self._list_requires()
+                if u2h(req.name) == u2h(pkg_name)]
+        self.depth.parse(pkgs, self.name)
+        if pkgs:
+            if pkgs[0] not in self.traced_chain:
+                pkgs[0].update_depth(self.depth.get(pkgs[0].name))
+                self.traced_chain.append(pkgs[0])
+            if pkgs[0].targets:
+                for target in pkgs[0].targets:
                     if self._is_exist(target.name) is False:
+                        target.update_depth(self.depth.get(target.name))
                         self.trace_chain(target.name)
 
     def _is_exist(self, pkg_name):
@@ -300,6 +304,8 @@ class Node(object):
         self.targets = []
         #: test targets
         self.test_targets = []
+        #: base dependency depth level
+        self.depth = 0
 
     def __repr__(self):
         """Return Node object name."""
@@ -327,6 +333,13 @@ class Node(object):
         """
         self.test_targets += nodes
 
+    def update_depth(self, depth):
+        """set dependency level.
+
+        :param int depth: dependency level.
+        """
+        self.depth = depth
+
 
 class Target(Node):
 
@@ -339,3 +352,46 @@ class Target(Node):
         self.specs = specs
         #: extras: True is extras when test_requries (False in default)
         self.extras = extras
+
+
+class Depth(object):
+
+    """Cache of the dependency level."""
+
+    def __init__(self):
+        """Initialize."""
+        self.cache = {}
+
+    def set(self, pkg_name, depth):
+        """Set depth of package.
+
+        :param str pkg_name: package name
+        :param int depth: dependency level
+        """
+        self.cache[pkg_name] = depth
+
+    def get(self, pkg_name):
+        """Get depth of package.
+
+        :rtype: int
+        :return: dependency level.
+
+        :param str pkg_name: package name.
+        """
+        return self.cache.get(pkg_name)
+
+    def parse(self, pkgs, pkg_name):
+        """Parse dependency depth.
+
+        :param list pkgs: package nodes list.
+        :param str pkg_name: package name.
+        """
+        for pkg in pkgs:
+            if pkg.name == pkg_name:
+                self.set(pkg.name, 0)
+            else:
+                if self.get(pkg.name) is None:
+                    self.set(pkg.name, 1)
+            for target in pkg.targets:
+                if self.get(target.name) is None:
+                    self.set(target.name, self.get(pkg.name) + 1)
