@@ -59,7 +59,8 @@ class Graph(object):
                               r=self.default_radius,
                               color=self.default_color,
                               version=metadata.version,
-                              link=self._normalize_url(metadata.url)))
+                              link=self._normalize_url(metadata.url),
+                              depth=node.depth))
         if node.targets:
             for target in node.targets:
                 if self._check_node(target, nodes):
@@ -68,7 +69,8 @@ class Graph(object):
                                       r=self.default_radius,
                                       color=self.requires_color,
                                       version=metadata.version,
-                                      link=self._normalize_url(metadata.url)))
+                                      link=self._normalize_url(metadata.url),
+                                      depth=target.depth))
 
     def _check_node(self, node, nodes):
         """Check appended node."""
@@ -179,6 +181,7 @@ class Networkx(Graph):
         for node in self.generate_nodes():
             self.graph.add_node(node['name'],
                                 version=node['version'],
-                                link=node['link'])
+                                link=node['link'],
+                                depth=node['depth'])
         self.generate_edges()
         return self.graph

@@ -1,1 +1,1 @@
-{"descr": "iso8601 dependencies", "time": "2015-05-29T03:26:01.986103", "nodes": [{"r": "6", "version": "0.1.10", "link": "https://bitbucket.org/micktwomey/pyiso8601", "color": "", "name": "iso8601"}], "lines": []}
+{"descr": "iso8601 dependencies", "time": "2015-05-29T03:26:01.986103", "nodes": [{"r": "6", "version": "0.1.10", "link": "https://bitbucket.org/micktwomey/pyiso8601", "color": "", "name": "iso8601", "depth": 0}], "lines": []}
