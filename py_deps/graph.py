@@ -43,7 +43,7 @@ class Graph(object):
     """Graph data generate abstract class."""
 
     default_radius = "6"
-    default_color = ""
+    default_color = "#ff9900"
     requires_color = "#5F9EA0"
     default_width = "1"
 
@@ -67,7 +67,7 @@ class Graph(object):
                     metadata = self._get_metadata(target.name)
                     nodes.append(dict(name=self._normalize_name(target.name),
                                       r=self.default_radius,
-                                      color=self.requires_color,
+                                      color=color(target.depth),
                                       version=metadata.version,
                                       link=self._normalize_url(metadata.url),
                                       depth=target.depth))
@@ -131,7 +131,7 @@ class Linkdraw(Graph):
         """Generate edges data."""
         return [dict(source=self._normalize_name(node.name),
                      target=self._normalize_name(target.name),
-                     color=self.requires_color,
+                     color=color(node.depth),
                      width=self.default_width,
                      descr="->",
                      link="")
@@ -185,3 +185,24 @@ class Networkx(Graph):
                                 depth=node['depth'])
         self.generate_edges()
         return self.graph
+
+
+def color(depth):
+    """color by depth level.
+
+    :rtype: str
+    :return: hex color code based blue.
+    :param int depth: dependency level
+    """
+    color_table = ['#d1e0fa',
+                   '#a4c1f4',
+                   '#76a1ef',
+                   '#4882ea',
+                   '#1b63e4',
+                   '#154fb7',
+                   '#103b89',
+                   '#0b285b',
+                   '#05142e']
+    if depth >= len(color_table):
+        depth = len(color_table) - 1
+    return color_table[depth]
