@@ -1,6 +1,14 @@
 History
 =======
 
+0.5.2 (2015-07-15)
+------------------
+
+* Fixes duplicated line of linkdraw.
+* Changes linkdraw colors by dependencies depth.
+* Adds depth property to graph nodes.
+* Adds parsing the package dependency depth.
+
 0.5.1 (2015-07-12)
 ------------------
 
