@@ -129,14 +129,18 @@ class Linkdraw(Graph):
 
     def generate_edges(self):
         """Generate edges data."""
-        return [dict(source=self._normalize_name(node.name),
-                     target=self._normalize_name(target.name),
-                     color=color(node.depth),
-                     width=self.default_width,
-                     descr="->",
-                     link="")
-                for node in self.chain_data
-                for target in node.targets]
+        edges = []
+        for node in self.chain_data:
+            for target in node.targets:
+                edge = dict(source=self._normalize_name(node.name),
+                            target=self._normalize_name(target.name),
+                            color=color(node.depth),
+                            width=self.default_width,
+                            descr="->",
+                            link="")
+                if edge not in edges:
+                    edges.append(edge)
+        return edges
 
     def generate_data(self):
         """Generate Linkdraw data."""
