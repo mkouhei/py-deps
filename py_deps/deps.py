@@ -13,7 +13,7 @@ from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 from py_deps import graph, cache
-from py_deps.exceptions import NotFound, BrokenPackage
+from py_deps.exceptions import NotFound, BrokenPackage, InvalidMetadata
 from py_deps.logger import trace_log
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
@@ -247,10 +247,14 @@ def _dist_to_node(dist_obj):
 def _wheel_to_node(metadata):
     """Convert wheel metadata to Node objects."""
     if metadata.get('extensions'):
-        url = (metadata.get('extensions')
-               .get('python.details')
-               .get('project_urls')
-               .get('Home'))
+        try:
+            url = (metadata.get('extensions')
+                   .get('python.details')
+                   .get('project_urls')
+                   .get('Home'))
+        except AttributeError:
+            trace_log(level='error')
+            raise InvalidMetadata("This package has no url in setup.")
     elif metadata.get('project_urls'):
         url = metadata.get('project_urls').get('Home')
     node = Node(metadata.get('name'),

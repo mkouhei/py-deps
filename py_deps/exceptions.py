@@ -23,3 +23,10 @@ class BrokenPackage(Error):
     """BrokenPackage."""
 
     pass
+
+
+class InvalidMetadata(Error):
+
+    """Invalid package metadata."""
+
+    pass
