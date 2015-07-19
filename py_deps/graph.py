@@ -3,6 +3,7 @@
 import json
 import networkx
 from datetime import datetime
+from py_deps.exceptions import InvalidMetadata
 
 
 def router(chain_data, draw_type=None, decode_type='',
@@ -124,7 +125,10 @@ class Linkdraw(Graph):
     def __init__(self, chain_data):
         """Initialize."""
         super(Linkdraw, self).__init__(chain_data)
-        self.descr = "{0} dependencies".format(chain_data[0].name)
+        try:
+            self.descr = "{0} dependencies".format(chain_data[0].name)
+        except IndexError:
+            raise InvalidMetadata("Package broken.")
         self.time = datetime.utcnow().isoformat()
 
     def generate_edges(self):
