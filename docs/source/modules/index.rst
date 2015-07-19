@@ -19,3 +19,8 @@
    :members:
    :show-inheritance:
    :inherited-members:
+
+.. automodule:: py_deps.exceptions
+   :members:
+   :show-inheritance:
+   :inherited-members:
