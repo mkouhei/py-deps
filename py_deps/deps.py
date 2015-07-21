@@ -222,8 +222,9 @@ class Package(object):
             pass
         return _wheel_to_node(metadata)
 
+    # pylint: disable=too-many-arguments
     def draw(self, draw_type=None, decode_type='',
-             disable_time=False, disable_descr=False):
+             disable_time=False, disable_descr=False, link_prefix=None):
         """Generate drawing data.
 
         :param str draw_type: [dot|blockdiag|linkdraw]
@@ -233,7 +234,8 @@ class Package(object):
                             draw_type=draw_type,
                             decode_type=decode_type,
                             disable_time=disable_time,
-                            disable_descr=disable_descr)
+                            disable_descr=disable_descr,
+                            link_prefix=link_prefix)
 
 
 def _dist_to_node(dist_obj):

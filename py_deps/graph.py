@@ -6,16 +6,17 @@ from datetime import datetime
 from py_deps.exceptions import InvalidMetadata
 
 
+# pylint: disable=too-many-arguments
 def router(chain_data, draw_type=None, decode_type='',
-           disable_time=False, disable_descr=False):
+           disable_time=False, disable_descr=False, link_prefix=None):
     """Routing drawing tool."""
     if draw_type == 'networkx':
-        nwx = Networkx(chain_data)
+        nwx = Networkx(chain_data, link_prefix)
         return nwx.generate_data()
     elif draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
-        linkdraw = Linkdraw(chain_data)
+        linkdraw = Linkdraw(chain_data, link_prefix)
         if disable_time:
             linkdraw.disable_time()
         if disable_descr:
@@ -48,9 +49,10 @@ class Graph(object):
     requires_color = "#5F9EA0"
     default_width = "1"
 
-    def __init__(self, chain_data):
+    def __init__(self, chain_data, link_prefix=None):
         """Initialize."""
         self.chain_data = chain_data
+        self.link_prefix = link_prefix
 
     def _generate_node(self, node, nodes):
         """Generate node data."""
@@ -60,7 +62,10 @@ class Graph(object):
                               r=self.default_radius,
                               color=self.default_color,
                               version=metadata.version,
-                              link=self._normalize_url(metadata.url),
+                              link=self._normalize_url(
+                                  metadata.url,
+                                  self._normalize_name(node.name),
+                                  metadata.version),
                               depth=node.depth))
         if node.targets:
             for target in node.targets:
@@ -70,7 +75,10 @@ class Graph(object):
                                       r=self.default_radius,
                                       color=color(target.depth),
                                       version=metadata.version,
-                                      link=self._normalize_url(metadata.url),
+                                      link=self._normalize_url(
+                                          metadata.url,
+                                          self._normalize_name(target.name),
+                                          metadata.version),
                                       depth=target.depth))
 
     def _check_node(self, node, nodes):
@@ -88,13 +96,19 @@ class Graph(object):
             self._generate_node(node, nodes)
         return nodes
 
-    @staticmethod
-    def _normalize_url(url):
+    def _normalize_url(self, url, node_name, version):
         """return package url."""
-        if url is None:
-            return ''
-        else:
+        if self.link_prefix:
+            if version:
+                return '{0}/{1}/{2}'.format(self.link_prefix,
+                                            node_name,
+                                            version)
+            else:
+                return '{0}/{1}'.format(self.link_prefix, node_name)
+        elif url:
             return url
+        else:
+            return ''
 
     @staticmethod
     def _normalize_name(name):
@@ -122,9 +136,9 @@ class Linkdraw(Graph):
 
     """Linkdraw object class."""
 
-    def __init__(self, chain_data):
+    def __init__(self, chain_data, link_prefix=None):
         """Initialize."""
-        super(Linkdraw, self).__init__(chain_data)
+        super(Linkdraw, self).__init__(chain_data, link_prefix=link_prefix)
         try:
             self.descr = "{0} dependencies".format(chain_data[0].name)
         except IndexError:
@@ -171,9 +185,9 @@ class Networkx(Graph):
 
     """Networkx object class."""
 
-    def __init__(self, chain_data):
+    def __init__(self, chain_data, link_prefix=None):
         """Initialize."""
-        super(Networkx, self).__init__(chain_data)
+        super(Networkx, self).__init__(chain_data, link_prefix=link_prefix)
         self.graph = networkx.DiGraph()
 
     def generate_edges(self):
@@ -189,7 +203,9 @@ class Networkx(Graph):
         for node in self.generate_nodes():
             self.graph.add_node(node['name'],
                                 version=node['version'],
-                                link=node['link'],
+                                link=self._normalize_url(node['link'],
+                                                         node['name'],
+                                                         node['version']),
                                 depth=node['depth'])
         self.generate_edges()
         return self.graph

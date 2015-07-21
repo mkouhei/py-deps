@@ -228,6 +228,9 @@ class EggTests(unittest.TestCase):
         with open('py_deps/tests/data/egg.linkdraw') as fobj:
             self.linkdraw = json.loads(fobj.read())
 
+        with open('py_deps/tests/data/egg.linkdraw-override-url') as fobj:
+            self.linkdraw_override_url = json.loads(fobj.read())
+
         cache.Pickle.default_cache_name = self.test_cache
         self.container = cache.backend(cache_name=self.test_cache)
         self.pkg = prepare('swiftsc', '0.6.3', 'egg', self.container)
@@ -270,6 +273,12 @@ class EggTests(unittest.TestCase):
         data = json.loads(self.pkg.draw('linkdraw', disable_time=True))
         self.linkdraw['time'] = None
         self.assertEqual(data, self.linkdraw)
+
+        data = json.loads(self.pkg.draw('linkdraw',
+                                        disable_time=True,
+                                        link_prefix='/api'))
+        self.linkdraw_override_url['time'] = None
+        self.assertEqual(data, self.linkdraw_override_url)
 
     def test_networkx(self):
         """Networkx test."""
