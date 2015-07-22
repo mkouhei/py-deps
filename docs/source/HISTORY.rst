@@ -1,6 +1,12 @@
 History
 =======
 
+0.5.4 (2015-07-22)
+------------------
+
+* Adds latest_version function.
+* Adds link_prefix for overriding node link.
+
 0.5.3 (2015-07-19)
 ------------------
 
