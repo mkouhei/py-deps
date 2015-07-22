@@ -48,6 +48,22 @@ def search(pkg_name, exactly=False):
         return result
 
 
+def latest_version(pkg_name):
+    """retrieve latest version.
+
+    :rtype: str
+    :return: latest version
+
+    :param str pkg_name: package name.
+    """
+    client = xmlrpclib.ServerProxy(PYPI_URL)
+    result = client.package_releases(pkg_name)
+    if result:
+        return result[0]
+    else:
+        return ''
+
+
 # pylint: disable=too-many-instance-attributes
 class Package(object):
 
