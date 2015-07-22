@@ -57,6 +57,16 @@ Search packages from PyPI.::
       'summary': 'Compute a dependency graph between active Python eggs.',
       'version': '0.5'}]
 
+Show latest version
+-------------------
+
+Retrieve latest package from PyPI.::
+
+    $ python
+    >>> from py_deps.deps import latest_version
+    >>> latest_version('deps')
+    '0.1.0'
+
 
 Initialize
 ----------
