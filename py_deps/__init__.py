@@ -6,7 +6,7 @@ Search packages
 Search packages from PyPI.::
 
     $ python
-    >>> from py_deps import search
+    >>> from py_deps.deps import search
     >>> search('deps')
     [{'_pypi_ordering': False,
       'name': 'anybox.recipe.sysdeps',
