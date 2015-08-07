@@ -123,6 +123,12 @@ class Graph(object):
         else:
             return Metadata()
 
+    def count_depth(self):
+        """Count each depth."""
+        nodes = self.generate_nodes()
+        return {i: [node.get('depth') for node in nodes].count(i)
+                for i in set([node.get('depth') for node in nodes])}
+
 
 class Metadata(object):
 
