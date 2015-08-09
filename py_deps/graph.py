@@ -186,6 +186,24 @@ class Linkdraw(Graph):
         """Disable time."""
         self.time = None
 
+    def generate_position(self):
+        """Generate position.
+
+        level 0 is the base depth, that is one only.
+
+        Nodes depth images is follows.::
+
+            0---1---2---3
+            |    `--2---3
+            |     `-2---3
+            |        `--3
+            1---2---3
+                 `--3
+        """
+        # deepest_level = self.count_depth().keys()[-1]
+        # depth_levels = len(self.count_depth().keys())
+        pass
+
 
 class Networkx(Graph):
 
