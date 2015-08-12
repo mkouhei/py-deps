@@ -200,14 +200,20 @@ class Linkdraw(Graph):
             1---2---3
                  `--3
 
-        base position:  0
-        level distance: the value that the smaller of the SVG width and height
-                        devided by the ``depth level``.
-        node disstance: the circumference drawed by the same level nodes
-                        devided by the ``num same level``.
-        depth level:    len(self.count_depth().key())
-        deepest level:  self.count_depth().keys()[-1]
-        num same level: self.count_depth().get(int:'some level')
+        base position
+            0
+        level distance
+            the value that the smaller of the SVG width and height
+            devided by the ``depth level``.
+        node disstance
+            the circumference drawed by the same level nodes
+            devided by the ``num same level``.
+        depth level
+            ``len(self.count_depth().key())``
+        deepest level
+            ``self.count_depth().keys()[-1]``
+        num same level
+            ``self.count_depth().get(int:'some level')``
         """
         pass
 
