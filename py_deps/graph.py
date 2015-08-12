@@ -194,14 +194,21 @@ class Linkdraw(Graph):
         Nodes depth images is follows.::
 
             0---1---2---3
-            |    `--2---3
+            |    `--2---3---4---5
             |     `-2---3
-            |        `--3
+            |        `--3---4
             1---2---3
                  `--3
+
+        base position:  0
+        level distance: the value that the smaller of the SVG width and height
+                        devided by the ``depth level``.
+        node disstance: the circumference drawed by the same level nodes
+                        devided by the ``num same level``.
+        depth level:    len(self.count_depth().key())
+        deepest level:  self.count_depth().keys()[-1]
+        num same level: self.count_depth().get(int:'some level')
         """
-        # deepest_level = self.count_depth().keys()[-1]
-        # depth_levels = len(self.count_depth().keys())
         pass
 
 
