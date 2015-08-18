@@ -24,6 +24,7 @@ if sys.version_info > (3, 0):
     import xmlrpc.client as xmlrpclib
 else:
     import xmlrpclib
+    import socket
 
 
 #: suffix of temporary directory name
@@ -40,11 +41,20 @@ def search(pkg_name, exactly=False):
     :param str pkg_name: package name.
     :param bool exactly: exactly match only.
     """
-    try:
-        client = xmlrpclib.ServerProxy(PYPI_URL)
-        result = client.search({'name': pkg_name})
-    except xmlrpclib.ProtocolError as exc:
-        raise BackendFailure(exc)
+    if sys.version_info < (3, 0):
+        try:
+            client = xmlrpclib.ServerProxy(PYPI_URL)
+            result = client.search({'name': pkg_name})
+        except (socket.error, xmlrpclib.ProtocolError) as exc:
+            raise BackendFailure(exc)
+    else:
+        try:
+            client = xmlrpclib.ServerProxy(PYPI_URL)
+            result = client.search({'name': pkg_name})
+        except (TimeoutError,
+                ConnectionRefusedError,
+                xmlrpclib.ProtocolError) as exc:
+            raise BackendFailure(exc)
     if exactly:
         return [pkg for pkg in result
                 if u2h(pkg.get('name')) == u2h(pkg_name)]
@@ -60,11 +70,20 @@ def latest_version(pkg_name):
 
     :param str pkg_name: package name.
     """
-    try:
-        client = xmlrpclib.ServerProxy(PYPI_URL)
-        result = client.package_releases(pkg_name)
-    except xmlrpclib.ProtocolError as exc:
-        raise BackendFailure(exc)
+    if sys.version_info < (3, 0):
+        try:
+            client = xmlrpclib.ServerProxy(PYPI_URL)
+            result = client.package_releases(pkg_name)
+        except (socket.error, xmlrpclib.ProtocolError) as exc:
+            raise BackendFailure(exc)
+    else:
+        try:
+            client = xmlrpclib.ServerProxy(PYPI_URL)
+            result = client.package_releases(pkg_name)
+        except (TimeoutError,
+                ConnectionRefusedError,
+                xmlrpclib.ProtocolError) as exc:
+            raise BackendFailure(exc)
     if result:
         return result[0]
     else:
