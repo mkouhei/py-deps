@@ -13,7 +13,8 @@ from pip.download import PipSession
 from pip.index import PackageFinder
 from pkg_resources import PathMetadata, Distribution
 from py_deps import graph, cache
-from py_deps.exceptions import NotFound, BrokenPackage, InvalidMetadata
+from py_deps.exceptions import (NotFound, BrokenPackage,
+                                InvalidMetadata, BackendFailure)
 from py_deps.logger import trace_log
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
@@ -39,8 +40,11 @@ def search(pkg_name, exactly=False):
     :param str pkg_name: package name.
     :param bool exactly: exactly match only.
     """
-    client = xmlrpclib.ServerProxy(PYPI_URL)
-    result = client.search({'name': pkg_name})
+    try:
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        result = client.search({'name': pkg_name})
+    except xmlrpclib.ProtocolError as exc:
+        raise BackendFailure(exc)
     if exactly:
         return [pkg for pkg in result
                 if u2h(pkg.get('name')) == u2h(pkg_name)]
@@ -56,8 +60,11 @@ def latest_version(pkg_name):
 
     :param str pkg_name: package name.
     """
-    client = xmlrpclib.ServerProxy(PYPI_URL)
-    result = client.package_releases(pkg_name)
+    try:
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        result = client.package_releases(pkg_name)
+    except xmlrpclib.ProtocolError as exc:
+        raise BackendFailure(exc)
     if result:
         return result[0]
     else:
@@ -129,12 +136,12 @@ class Package(object):
         """
         try:
             self.reqset.prepare_files(self.finder)
-        except pip.exceptions.DistributionNotFound as exp:
+        except pip.exceptions.DistributionNotFound as exc:
             trace_log(level='warning')
-            raise NotFound(exp)
-        except pip.exceptions.InstallationError as exp:
+            raise NotFound(exc)
+        except pip.exceptions.InstallationError as exc:
             trace_log(level='error')
-            raise BrokenPackage(exp)
+            raise BrokenPackage(exc)
 
     def _list_requires(self):
         """Listing requires object or dict object.

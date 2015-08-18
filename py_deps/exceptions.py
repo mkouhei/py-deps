@@ -30,3 +30,10 @@ class InvalidMetadata(Error):
     """Invalid package metadata."""
 
     pass
+
+
+class BackendFailure(Error):
+
+    """PyPI service down."""
+
+    pass
