@@ -1,6 +1,14 @@
 History
 =======
 
+0.5.5 (2015-08-19)
+------------------
+
+* Adds TimeoutError, ConnectionRefusedError / socket.error exceptions.
+* Adds error handling the PyPI service down.
+* Changes Sphinx theme to sphinx_rtd_theme.
+* Adds counter of the each depth.
+
 0.5.4 (2015-07-22)
 ------------------
 
