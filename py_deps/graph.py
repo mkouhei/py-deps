@@ -205,7 +205,7 @@ class Linkdraw(Graph):
         level distance
             the value that the smaller of the SVG width and height
             devided by the ``depth level``.
-        node disstance
+        node distance
             the circumference drawed by the same level nodes
             devided by the ``num same level``.
         depth level
