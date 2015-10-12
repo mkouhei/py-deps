@@ -3,7 +3,6 @@
 
 
 class Error(Exception):
-
     """Base error class."""
 
     def __init__(self, message=None):
@@ -12,28 +11,24 @@ class Error(Exception):
 
 
 class NotFound(Error):
-
     """Not Found."""
 
     pass
 
 
 class BrokenPackage(Error):
-
     """BrokenPackage."""
 
     pass
 
 
 class InvalidMetadata(Error):
-
     """Invalid package metadata."""
 
     pass
 
 
 class BackendFailure(Error):
-
     """PyPI service down."""
 
     pass

@@ -41,7 +41,6 @@ def backend(**kwargs):
 
 
 class Container(object):
-
     """Package container class."""
 
     def __init__(self, cache_name=None):
@@ -73,7 +72,6 @@ class Container(object):
 
 
 class Pickle(Container):
-
     """Cache backend is Pickle."""
 
     #: default cache file name
@@ -108,7 +106,6 @@ class Pickle(Container):
 
 
 class Memcached(Container):
-
     """Cache backend is Memecached."""
 
     def __init__(self, servers=None,

@@ -41,7 +41,6 @@ def pretty_print(chain_data):
 
 
 class Graph(object):
-
     """Graph data generate abstract class."""
 
     default_radius = "6"
@@ -131,7 +130,6 @@ class Graph(object):
 
 
 class Metadata(object):
-
     """Metadata object class."""
 
     version = None
@@ -139,7 +137,6 @@ class Metadata(object):
 
 
 class Linkdraw(Graph):
-
     """Linkdraw object class."""
 
     def __init__(self, chain_data, link_prefix=None):
@@ -219,7 +216,6 @@ class Linkdraw(Graph):
 
 
 class Networkx(Graph):
-
     """Networkx object class."""
 
     def __init__(self, chain_data, link_prefix=None):
