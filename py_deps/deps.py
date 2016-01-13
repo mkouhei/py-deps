@@ -4,9 +4,9 @@ import sys
 import os
 import tempfile
 import re
+from glob import glob
 import pip
 import wheel.util
-from glob import glob
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
 from pip.download import PipSession
