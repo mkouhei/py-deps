@@ -51,6 +51,7 @@ def search(pkg_name, exactly=False):
         try:
             client = xmlrpclib.ServerProxy(PYPI_URL)
             result = client.search({'name': pkg_name})
+            # pylint: disable=undefined-variable
         except (TimeoutError,
                 ConnectionRefusedError,
                 xmlrpclib.ProtocolError) as exc:
@@ -80,6 +81,7 @@ def latest_version(pkg_name):
         try:
             client = xmlrpclib.ServerProxy(PYPI_URL)
             result = client.package_releases(pkg_name)
+            # pylint: disable=undefined-variable
         except (TimeoutError,
                 ConnectionRefusedError,
                 xmlrpclib.ProtocolError) as exc:
