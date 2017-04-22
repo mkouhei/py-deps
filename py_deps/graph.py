@@ -22,11 +22,12 @@ def router(chain_data, draw_type=None, decode_type='',
         if disable_descr:
             linkdraw.disable_descr()
         if decode_type == 'json':
-            return linkdraw.generate_data()
+            draw_data = linkdraw.generate_data()
         else:
-            return json.dumps(linkdraw.generate_data())
+            draw_data = json.dumps(linkdraw.generate_data())
     else:
-        return pretty_print(chain_data)
+        draw_data = pretty_print(chain_data)
+    return draw_data
 
 
 def pretty_print(chain_data):
@@ -84,9 +85,10 @@ class Graph(object):
         """Check appended node."""
         if ([_node for _node in nodes
              if _node['name'] == self._normalize_name(node.name)]):
-            return False
+            result = False
         else:
-            return True
+            result = True
+        return result
 
     def generate_nodes(self):
         """Generate nodes data."""
@@ -99,15 +101,16 @@ class Graph(object):
         """return package url."""
         if self.link_prefix:
             if version:
-                return '{0}/{1}/{2}'.format(self.link_prefix,
-                                            node_name,
-                                            version)
+                normalize_url = '{0}/{1}/{2}'.format(self.link_prefix,
+                                                     node_name,
+                                                     version)
             else:
-                return '{0}/{1}'.format(self.link_prefix, node_name)
+                normalize_url = '{0}/{1}'.format(self.link_prefix, node_name)
         elif url:
-            return url
+            normalize_url = url
         else:
-            return ''
+            normalize_url = ''
+        return normalize_url
 
     @staticmethod
     def _normalize_name(name):
@@ -118,9 +121,10 @@ class Graph(object):
         """get the metadata of package."""
         data = [req for req in self.chain_data if req.name == name]
         if len(data) == 1:
-            return data[0]
+            meta_data = data[0]
         else:
-            return Metadata()
+            meta_data = Metadata()
+        return meta_data
 
     def count_depth(self):
         """Count each depth."""

@@ -57,10 +57,9 @@ def search(pkg_name, exactly=False):
                 xmlrpclib.ProtocolError) as exc:
             raise BackendFailure(exc)
     if exactly:
-        return [pkg for pkg in result
-                if u2h(pkg.get('name')) == u2h(pkg_name)]
-    else:
-        return result
+        result = [pkg for pkg in result
+                  if u2h(pkg.get('name')) == u2h(pkg_name)]
+    return result
 
 
 def latest_version(pkg_name):
@@ -74,22 +73,23 @@ def latest_version(pkg_name):
     if sys.version_info < (3, 0):
         try:
             client = xmlrpclib.ServerProxy(PYPI_URL)
-            result = client.package_releases(pkg_name)
+            package_releases = client.package_releases(pkg_name)
         except (socket.error, xmlrpclib.ProtocolError) as exc:
             raise BackendFailure(exc)
     else:
         try:
             client = xmlrpclib.ServerProxy(PYPI_URL)
-            result = client.package_releases(pkg_name)
+            package_releases = client.package_releases(pkg_name)
             # pylint: disable=undefined-variable
         except (TimeoutError,
                 ConnectionRefusedError,
                 xmlrpclib.ProtocolError) as exc:
             raise BackendFailure(exc)
-    if result:
-        return result[0]
+    if package_releases:
+        result = package_releases[0]
     else:
-        return ''
+        result = ''
+    return result
 
 
 # pylint: disable=too-many-instance-attributes

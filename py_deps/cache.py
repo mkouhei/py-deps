@@ -31,13 +31,14 @@ def backend(**kwargs):
         Pickle filename (default, optional)
     """
     if kwargs.get('servers'):
-        return Memcached(kwargs.get('servers'),
-                         username=kwargs.get('username'),
-                         password=kwargs.get('password'),
-                         behaviors=kwargs.get('behaviors'))
+        cache = Memcached(kwargs.get('servers'),
+                          username=kwargs.get('username'),
+                          password=kwargs.get('password'),
+                          behaviors=kwargs.get('behaviors'))
     else:
         # default Pickle
-        return Pickle(cache_name=kwargs.get('cache_name'))
+        cache = Pickle(cache_name=kwargs.get('cache_name'))
+    return cache
 
 
 class Container(object):
