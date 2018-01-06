@@ -23,10 +23,11 @@ Status
 Requirements
 ============
 
-* Python 2.7 over or Python 3.3 over or PyPy 2.4.0 over
-* pip 1.5.6 or 6.1.1 over
-* wheel 0.24.0 over
-* NetworkX 1.9 over
+* Python 2.7 over or Python 3.5 over or PyPy 5.10.0 over
+* setuptools 38.4.0 over
+* pip 9.0.1 over
+* wheel 0.30.0 over
+* NetworkX 2.0 over
 * pylibmc 1.4.3 over (optional)
 
 Features
