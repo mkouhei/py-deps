@@ -93,7 +93,7 @@ def latest_version(pkg_name):
 
 
 # pylint: disable=too-many-instance-attributes
-class Package(object):
+class Package:
     """Package class."""
 
     #: index_url
@@ -337,7 +337,7 @@ def u2h(name):
     return name.replace('_', '-')
 
 
-class Node(object):
+class Node:
     """Node object class."""
 
     def __init__(self, name, version=None, url=None):
@@ -401,7 +401,7 @@ class Target(Node):
         self.extras = extras
 
 
-class Depth(object):
+class Depth:
     """Cache of the dependency level."""
 
     def __init__(self):

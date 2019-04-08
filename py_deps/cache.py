@@ -41,7 +41,7 @@ def backend(**kwargs):
     return cache
 
 
-class Container(object):
+class Container:
     """Package container class."""
 
     def __init__(self, cache_name=None):
@@ -51,7 +51,6 @@ class Container(object):
 
     def store_data(self, key, data):
         """Store traced_chain data."""
-        pass
 
     def read_data(self, key):
         """Read traced_chain data.
