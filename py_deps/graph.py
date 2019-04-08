@@ -129,6 +129,7 @@ class Graph:
     def count_depth(self):
         """Count each depth."""
         nodes = self.generate_nodes()
+        # pylint: disable=consider-using-set-comprehension
         return {i: [node.get('depth') for node in nodes].count(i)
                 for i in set([node.get('depth') for node in nodes])}
 
