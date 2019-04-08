@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """py_deps.deps module."""
-import sys
 import os
 import tempfile
 import re
 from glob import glob
 import pip
 import wheel.util
+import xmlrpc.client as xmlrpclib
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
 from pip.download import PipSession
@@ -16,15 +16,11 @@ from py_deps import graph, cache
 from py_deps.exceptions import (NotFound, BrokenPackage,
                                 InvalidMetadata, BackendFailure)
 from py_deps.logger import trace_log
+
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
 else:
     from pip.util import rmtree
-if sys.version_info > (3, 0):
-    import xmlrpc.client as xmlrpclib
-else:
-    import xmlrpclib
-    import socket
 
 
 #: suffix of temporary directory name
@@ -41,21 +37,14 @@ def search(pkg_name, exactly=False):
     :param str pkg_name: package name.
     :param bool exactly: exactly match only.
     """
-    if sys.version_info < (3, 0):
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            result = client.search({'name': pkg_name})
-        except (socket.error, xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
-    else:
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            result = client.search({'name': pkg_name})
-            # pylint: disable=undefined-variable
-        except (TimeoutError,
-                ConnectionRefusedError,
-                xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
+    try:
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        result = client.search({'name': pkg_name})
+        # pylint: disable=undefined-variable
+    except (TimeoutError,
+            ConnectionRefusedError,
+            xmlrpclib.ProtocolError) as exc:
+        raise BackendFailure(exc)
     if exactly:
         result = [pkg for pkg in result
                   if u2h(pkg.get('name')) == u2h(pkg_name)]
@@ -70,21 +59,14 @@ def latest_version(pkg_name):
 
     :param str pkg_name: package name.
     """
-    if sys.version_info < (3, 0):
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            package_releases = client.package_releases(pkg_name)
-        except (socket.error, xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
-    else:
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            package_releases = client.package_releases(pkg_name)
-            # pylint: disable=undefined-variable
-        except (TimeoutError,
-                ConnectionRefusedError,
-                xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
+    try:
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        package_releases = client.package_releases(pkg_name)
+        # pylint: disable=undefined-variable
+    except (TimeoutError,
+            ConnectionRefusedError,
+            xmlrpclib.ProtocolError) as exc:
+        raise BackendFailure(exc)
     if package_releases:
         result = package_releases[0]
     else:
