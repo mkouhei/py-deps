@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """py_deps.deps module."""
-import sys
 import os
 import tempfile
 import re
 from glob import glob
 import pip
 import wheel.util
+import xmlrpc.client as xmlrpclib
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
 from pip.download import PipSession
@@ -16,15 +16,11 @@ from py_deps import graph, cache
 from py_deps.exceptions import (NotFound, BrokenPackage,
                                 InvalidMetadata, BackendFailure)
 from py_deps.logger import trace_log
+
 if pip.__version__ >= '6.0.0':
     from pip.utils import rmtree
 else:
     from pip.util import rmtree
-if sys.version_info > (3, 0):
-    import xmlrpc.client as xmlrpclib
-else:
-    import xmlrpclib
-    import socket
 
 
 #: suffix of temporary directory name
@@ -41,21 +37,14 @@ def search(pkg_name, exactly=False):
     :param str pkg_name: package name.
     :param bool exactly: exactly match only.
     """
-    if sys.version_info < (3, 0):
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            result = client.search({'name': pkg_name})
-        except (socket.error, xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
-    else:
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            result = client.search({'name': pkg_name})
-            # pylint: disable=undefined-variable
-        except (TimeoutError,
-                ConnectionRefusedError,
-                xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
+    try:
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        result = client.search({'name': pkg_name})
+        # pylint: disable=undefined-variable
+    except (TimeoutError,
+            ConnectionRefusedError,
+            xmlrpclib.ProtocolError) as exc:
+        raise BackendFailure(exc)
     if exactly:
         result = [pkg for pkg in result
                   if u2h(pkg.get('name')) == u2h(pkg_name)]
@@ -63,28 +52,21 @@ def search(pkg_name, exactly=False):
 
 
 def latest_version(pkg_name):
-    """retrieve latest version.
+    """Retrieve latest version.
 
     :rtype: str
     :return: latest version
 
     :param str pkg_name: package name.
     """
-    if sys.version_info < (3, 0):
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            package_releases = client.package_releases(pkg_name)
-        except (socket.error, xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
-    else:
-        try:
-            client = xmlrpclib.ServerProxy(PYPI_URL)
-            package_releases = client.package_releases(pkg_name)
-            # pylint: disable=undefined-variable
-        except (TimeoutError,
-                ConnectionRefusedError,
-                xmlrpclib.ProtocolError) as exc:
-            raise BackendFailure(exc)
+    try:
+        client = xmlrpclib.ServerProxy(PYPI_URL)
+        package_releases = client.package_releases(pkg_name)
+        # pylint: disable=undefined-variable
+    except (TimeoutError,
+            ConnectionRefusedError,
+            xmlrpclib.ProtocolError) as exc:
+        raise BackendFailure(exc)
     if package_releases:
         result = package_releases[0]
     else:
@@ -93,7 +75,7 @@ def latest_version(pkg_name):
 
 
 # pylint: disable=too-many-instance-attributes
-class Package(object):
+class Package:
     """Package class."""
 
     #: index_url
@@ -108,6 +90,8 @@ class Package(object):
         self.container = _cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
         self.depth = Depth()
+        self.requires = []
+        self.reqset = None
 
         if _cache.read_data((name, self.version)) is None or update_force:
 
@@ -125,8 +109,8 @@ class Package(object):
                 name = '{0}=={1}'.format(name, self.version)
             req = InstallRequirement.from_line(name,
                                                comes_from=None)
-            self.reqset.add_requirement(req)
-            self.requires = []
+            if self.reqset is not None:
+                self.reqset.add_requirement(req)
             self.traced_chain = []
             self.trace_chain()
             _cache.store_data((self.name, self.version), self.traced_chain)
@@ -155,7 +139,8 @@ class Package(object):
         This method does not download requires recursively.
         """
         try:
-            self.reqset.prepare_files(self.finder)
+            if self.reqset is not None:
+                self.reqset.prepare_files(self.finder)
         except pip.exceptions.DistributionNotFound as exc:
             trace_log(level='warning')
             raise NotFound(exc)
@@ -164,7 +149,7 @@ class Package(object):
             raise BrokenPackage(exc)
 
     def _list_requires(self):
-        """Listing requires object or dict object.
+        """List requires object or dict object.
 
         :rtype: list
         :return: requires object or dict object
@@ -208,7 +193,7 @@ class Package(object):
                          if os.path.isdir(os.path.join(self.tempdir, d))]
 
     def _parse(self, pkg_dir):
-        """Parsing package metadata.
+        """Parse package metadata.
 
         :rtype: `pkg_resouces.Distributions` or list
         :return: package metadata
@@ -316,7 +301,7 @@ def _wheel_to_node(metadata):
 
 
 def _parse_require(requires, extras=False):
-    """parse require metadata."""
+    """Parse require metadata."""
     targets = []
     for req in requires:
         if len(req.split()) == 1:
@@ -337,7 +322,7 @@ def u2h(name):
     return name.replace('_', '-')
 
 
-class Node(object):
+class Node:
     """Node object class."""
 
     def __init__(self, name, version=None, url=None):
@@ -382,7 +367,7 @@ class Node(object):
         self.test_targets += nodes
 
     def update_depth(self, depth):
-        """set dependency level.
+        """Set dependency level.
 
         :param int depth: dependency level.
         """
@@ -401,7 +386,7 @@ class Target(Node):
         self.extras = extras
 
 
-class Depth(object):
+class Depth:
     """Cache of the dependency level."""
 
     def __init__(self):

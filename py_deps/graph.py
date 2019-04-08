@@ -13,7 +13,7 @@ def router(chain_data, draw_type=None, decode_type='',
     if draw_type == 'networkx':
         nwx = Networkx(chain_data, link_prefix)
         return nwx.generate_data()
-    elif draw_type == 'blockdiag':
+    if draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
         linkdraw = Linkdraw(chain_data, link_prefix)
@@ -41,7 +41,7 @@ def pretty_print(chain_data):
     return lines.rstrip()
 
 
-class Graph(object):
+class Graph:
     """Graph data generate abstract class."""
 
     default_radius = "6"
@@ -98,7 +98,7 @@ class Graph(object):
         return nodes
 
     def _normalize_url(self, url, node_name, version):
-        """return package url."""
+        """Return package url."""
         if self.link_prefix:
             if version:
                 normalize_url = '{0}/{1}/{2}'.format(self.link_prefix,
@@ -118,7 +118,7 @@ class Graph(object):
         return name
 
     def _get_metadata(self, name):
-        """get the metadata of package."""
+        """Get the metadata of package."""
         data = [req for req in self.chain_data if req.name == name]
         if len(data) == 1:
             meta_data = data[0]
@@ -129,11 +129,12 @@ class Graph(object):
     def count_depth(self):
         """Count each depth."""
         nodes = self.generate_nodes()
+        # pylint: disable=consider-using-set-comprehension
         return {i: [node.get('depth') for node in nodes].count(i)
                 for i in set([node.get('depth') for node in nodes])}
 
 
-class Metadata(object):
+class Metadata:
     """Metadata object class."""
 
     version = None
@@ -216,7 +217,6 @@ class Linkdraw(Graph):
         num same level
             ``self.count_depth().get(int:'some level')``
         """
-        pass
 
 
 class Networkx(Graph):
@@ -249,7 +249,7 @@ class Networkx(Graph):
 
 
 def color(depth):
-    """color by depth level.
+    """Color by depth level.
 
     :rtype: str
     :return: hex color code based blue.

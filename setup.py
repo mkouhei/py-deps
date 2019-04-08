@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2015-2018 Kouhei Maeda <mkouhei@palmtb.net>
+Copyright (C) 2015-2019 Kouhei Maeda <mkouhei@palmtb.net>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,11 +55,10 @@ classifiers = [
     "License :: OSI Approved :: "
     "GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 2",
-    "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -69,10 +68,10 @@ long_description = (
     read_content("README.rst") +
     read_content(os.path.join("docs/source", "HISTORY.rst")))
 
-requires = ['setuptools>=38.4.0',
-            'pip>=9.0.1',
-            'wheel>=0.30.0',
-            'networkx>=2.0']
+requires = ['setuptools==41.0.0',
+            'pip==9.0.3',
+            'wheel==0.31.1',
+            'networkx==2.2']
 extras_require = {
     'reST': ['Sphinx'],
     'memcache': ['pylibmc'],
