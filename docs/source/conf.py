@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'py-deps'
-copyright = '2015-2018, Kouhei Maeda <mkouhei@palmtb.net>'
+copyright = '2015-2019, Kouhei Maeda <mkouhei@palmtb.net>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
