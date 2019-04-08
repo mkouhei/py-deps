@@ -68,10 +68,10 @@ long_description = (
     read_content("README.rst") +
     read_content(os.path.join("docs/source", "HISTORY.rst")))
 
-requires = ['setuptools>=38.4.0',
-            'pip>=9.0.1',
-            'wheel>=0.30.0',
-            'networkx>=2.0']
+requires = ['setuptools==41.0.0',
+            'pip==9.0.3',
+            'wheel==0.31.1',
+            'networkx==2.2']
 extras_require = {
     'reST': ['Sphinx'],
     'memcache': ['pylibmc'],
