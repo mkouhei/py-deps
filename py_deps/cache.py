@@ -50,7 +50,7 @@ class Container(object):
         self.container = {}
 
     def store_data(self, key, data):
-        """store traced_chain data."""
+        """Store traced_chain data."""
         pass
 
     def read_data(self, key):

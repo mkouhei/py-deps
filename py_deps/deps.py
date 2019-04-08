@@ -63,7 +63,7 @@ def search(pkg_name, exactly=False):
 
 
 def latest_version(pkg_name):
-    """retrieve latest version.
+    """Retrieve latest version.
 
     :rtype: str
     :return: latest version
@@ -164,7 +164,7 @@ class Package(object):
             raise BrokenPackage(exc)
 
     def _list_requires(self):
-        """Listing requires object or dict object.
+        """List requires object or dict object.
 
         :rtype: list
         :return: requires object or dict object
@@ -208,7 +208,7 @@ class Package(object):
                          if os.path.isdir(os.path.join(self.tempdir, d))]
 
     def _parse(self, pkg_dir):
-        """Parsing package metadata.
+        """Parse package metadata.
 
         :rtype: `pkg_resouces.Distributions` or list
         :return: package metadata
@@ -316,7 +316,7 @@ def _wheel_to_node(metadata):
 
 
 def _parse_require(requires, extras=False):
-    """parse require metadata."""
+    """Parse require metadata."""
     targets = []
     for req in requires:
         if len(req.split()) == 1:
@@ -382,7 +382,7 @@ class Node(object):
         self.test_targets += nodes
 
     def update_depth(self, depth):
-        """set dependency level.
+        """Set dependency level.
 
         :param int depth: dependency level.
         """

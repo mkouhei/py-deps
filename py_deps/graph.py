@@ -98,7 +98,7 @@ class Graph(object):
         return nodes
 
     def _normalize_url(self, url, node_name, version):
-        """return package url."""
+        """Return package url."""
         if self.link_prefix:
             if version:
                 normalize_url = '{0}/{1}/{2}'.format(self.link_prefix,
@@ -118,7 +118,7 @@ class Graph(object):
         return name
 
     def _get_metadata(self, name):
-        """get the metadata of package."""
+        """Get the metadata of package."""
         data = [req for req in self.chain_data if req.name == name]
         if len(data) == 1:
             meta_data = data[0]
@@ -249,7 +249,7 @@ class Networkx(Graph):
 
 
 def color(depth):
-    """color by depth level.
+    """Color by depth level.
 
     :rtype: str
     :return: hex color code based blue.
