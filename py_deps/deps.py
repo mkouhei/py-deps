@@ -90,6 +90,8 @@ class Package:
         self.container = _cache.container
         self.tempdir = tempfile.mkdtemp(suffix=SUFFIX)
         self.depth = Depth()
+        self.requires = []
+        self.reqset = None
 
         if _cache.read_data((name, self.version)) is None or update_force:
 
@@ -107,8 +109,8 @@ class Package:
                 name = '{0}=={1}'.format(name, self.version)
             req = InstallRequirement.from_line(name,
                                                comes_from=None)
-            self.reqset.add_requirement(req)
-            self.requires = []
+            if self.reqset is not None:
+                self.reqset.add_requirement(req)
             self.traced_chain = []
             self.trace_chain()
             _cache.store_data((self.name, self.version), self.traced_chain)
@@ -137,7 +139,8 @@ class Package:
         This method does not download requires recursively.
         """
         try:
-            self.reqset.prepare_files(self.finder)
+            if self.reqset is not None:
+                self.reqset.prepare_files(self.finder)
         except pip.exceptions.DistributionNotFound as exc:
             trace_log(level='warning')
             raise NotFound(exc)
