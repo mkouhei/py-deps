@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """py_deps.deps module."""
+import json
 import os
 import tempfile
 import re
 from glob import glob
 import pip
-import wheel.util
 import xmlrpc.client as xmlrpclib
 from pip.req import RequirementSet, InstallRequirement
 from pip.locations import src_prefix
@@ -244,7 +244,7 @@ class Package:
         elif os.path.isfile(os.path.join(dist_info, 'pydist.json')):
             with open(os.path.join(dist_info, 'pydist.json'), 'r') as fobj:
                 data = fobj.read()
-        metadata = wheel.util.from_json(data)
+        metadata = json.loads(data)
         if metadata.get('run_requires') is None:
             # To Do: parsing requirements.txt later.
             pass
