@@ -256,7 +256,7 @@ class Package:
         """Generate drawing data.
 
         :param str draw_type: [dot|blockdiag|linkdraw]
-        :param str decode_type: [''|json(linkdraw)]
+        :param str decode_type: [blank|json]
         """
         return graph.router(self.traced_chain,
                             draw_type=draw_type,
@@ -354,7 +354,7 @@ class Node:
     def remove_targets(self, *nodes):
         """Remove targets.
 
-        :param *list *nodes: nodes list
+        :param list nodes: nodes list
         """
         for node in nodes:
             del self.targets[self.targets.index(node)]

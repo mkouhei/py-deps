@@ -73,7 +73,7 @@ long_description = (
 requires = ['setuptools==41.0.0',
             'pip==9.0.3',
             'wheel==0.31.1',
-            'networkx==2.2']
+            'networkx==2.4']
 extras_require = {
     'reST': ['Sphinx'],
     'memcache': ['pylibmc']
