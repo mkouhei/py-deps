@@ -70,7 +70,7 @@ long_description = (
     )
 )
 
-requires = ['setuptools==41.0.0',
+requires = ['setuptools>=46.1',
             'pip==9.0.3',
             'wheel==0.31.1',
             'networkx==2.4']
