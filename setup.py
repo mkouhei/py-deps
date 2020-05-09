@@ -65,8 +65,10 @@ classifiers = [
 
 
 long_description = (
-    read_content("README.rst") +
-    read_content(os.path.join("docs/source", "HISTORY.rst")))
+    read_content("README.rst") + read_content(
+        os.path.join("docs/source", "HISTORY.rst")
+    )
+)
 
 requires = ['setuptools==41.0.0',
             'pip==9.0.3',
@@ -74,8 +76,9 @@ requires = ['setuptools==41.0.0',
             'networkx==2.2']
 extras_require = {
     'reST': ['Sphinx'],
-    'memcache': ['pylibmc'],
-    }
+    'memcache': ['pylibmc']
+}
+
 if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
