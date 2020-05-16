@@ -1,4 +1,0 @@
-swiftsc -> [setuptools, requests, python-magic]
-setuptools -> [certifi, wincertstore, setuptools[ssl], pytest]
-requests -> [pyOpenSSL, ndg-httpsclient, pyasn1]
-python-magic -> []
