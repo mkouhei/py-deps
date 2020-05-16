@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2015-2019 Kouhei Maeda <mkouhei@palmtb.net>
+Copyright (C) 2015-2020 Kouhei Maeda <mkouhei@palmtb.net>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -50,17 +50,14 @@ def read_content(filepath):
 
 
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: "
     "GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.5",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: Implementation :: CPython"
 ]
 
 
@@ -72,7 +69,6 @@ long_description = (
 
 requires = ['setuptools>=46.1',
             'pip>=20.0',
-            'wheel>=0.34.0',
             'networkx==2.4']
 extras_require = {
     'reST': ['Sphinx'],
@@ -83,7 +79,7 @@ if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
 setup(name='py-deps',
-      version='0.5.5',
+      version='1.0.0',
       description='parsing the Python deps and generating graph data',
       long_description=long_description,
       long_description_content_type='text/x-rst',
