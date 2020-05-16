@@ -1,6 +1,13 @@
 History
 =======
 
+1.0.0 (2020-05-16)
+------------------
+
+* Updates dependencies.
+* Refactors.
+* Supports Python 3.8 only.
+
 0.5.5 (2015-08-19)
 ------------------
 
