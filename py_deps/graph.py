@@ -1,33 +1,37 @@
 # -*- coding: utf-8 -*-
 """py_deps.graph module."""
-import json
 import networkx
 from datetime import datetime
-from py_deps.exceptions import InvalidMetadata
 
 
-# pylint: disable=too-many-arguments
-def router(chain_data, draw_type=None, decode_type='',
-           disable_time=False, disable_descr=False, link_prefix=None):
+def router(package, draw_type=None, link_prefix=None):
     """Routing drawing tool."""
     if draw_type == 'networkx':
-        nwx = Networkx(chain_data, link_prefix)
+        nwx = Networkx(package, link_prefix)
         return nwx.generate_data()
     if draw_type == 'blockdiag':
         pass
     elif draw_type == 'linkdraw':
-        linkdraw = Linkdraw(chain_data, link_prefix)
-        if disable_time:
-            linkdraw.disable_time()
-        if disable_descr:
-            linkdraw.disable_descr()
-        if decode_type == 'json':
-            draw_data = linkdraw.generate_data()
-        else:
-            draw_data = json.dumps(linkdraw.generate_data())
+        linkdraw = Linkdraw(package, link_prefix)
+        draw_data = linkdraw.generate_data()
     else:
-        draw_data = pretty_print(chain_data)
+        draw_data = '\n'.join(pretty_print(package.traced_chain))
     return draw_data
+
+
+def edge_key(source_node, target_node):
+    """Edge source_node -> target_node key."""
+    return f'{source_node.name}=>{target_node.name}'
+
+
+def generate_data(chain_data, func):
+    """Generate dependencies graph."""
+    lines = list()
+    for node in chain_data:
+        if len(node.targets) > 0:
+            lines.append(func(node))
+            lines += generate_data(node.targets, func)
+    return lines
 
 
 def pretty_print(chain_data):
@@ -35,10 +39,9 @@ def pretty_print(chain_data):
 
     :param list chain_data: List of `deps.Node`
     """
-    lines = ''
-    for node in chain_data:
-        lines += '{0} -> {1}\n'.format(node, node.targets)
-    return lines.rstrip()
+    def node_edge(node):
+        return f'{node} -> {node.targets}'
+    return generate_data(chain_data, func=node_edge)
 
 
 class Graph:
@@ -49,63 +52,42 @@ class Graph:
     requires_color = "#5F9EA0"
     default_width = "1"
 
-    def __init__(self, chain_data, link_prefix=None):
+    def __init__(self, package, link_prefix=None):
         """Initialize."""
-        self.chain_data = chain_data
+        self.package = package
+        self.chain_data = package.traced_chain
         self.link_prefix = link_prefix
+        self.check_set = set()
 
-    def _generate_node(self, node, nodes):
-        """Generate node data."""
-        if self._check_node(node, nodes):
-            metadata = self._get_metadata(node.name)
-            nodes.append(dict(name=self._normalize_name(node.name),
-                              r=self.default_radius,
-                              color=self.default_color,
-                              version=metadata.version,
-                              link=self._normalize_url(
-                                  metadata.url,
-                                  self._normalize_name(node.name),
-                                  metadata.version),
-                              depth=node.depth))
-        if node.targets:
-            for target in node.targets:
-                if self._check_node(target, nodes):
-                    metadata = self._get_metadata(target.name)
-                    nodes.append(dict(name=self._normalize_name(target.name),
-                                      r=self.default_radius,
-                                      color=color(target.depth),
-                                      version=metadata.version,
-                                      link=self._normalize_url(
-                                          metadata.url,
-                                          self._normalize_name(target.name),
-                                          metadata.version),
-                                      depth=target.depth))
+    def __generate_node_dict(self, node):
+        return dict(name=self._normalize_name(node.name),
+                    r=self.default_radius,
+                    color=color(node.depth),
+                    version=node.version,
+                    link=self._normalize_url(
+                        node.url,
+                        self._normalize_name(node.name),
+                        node.version),
+                    depth=node.depth)
 
-    def _check_node(self, node, nodes):
-        """Check appended node."""
-        if ([_node for _node in nodes
-             if _node['name'] == self._normalize_name(node.name)]):
-            result = False
-        else:
-            result = True
-        return result
-
-    def generate_nodes(self):
+    def _generate_nodes(self, chain_data):
         """Generate nodes data."""
         nodes = []
-        for node in self.chain_data:
-            self._generate_node(node, nodes)
+        for node in chain_data:
+            if node.name not in self.check_set:
+                nodes.append(self.__generate_node_dict(node))
+                self.check_set.add(node.name)
+                if len(node.targets) > 0:
+                    nodes += self._generate_nodes(node.targets)
         return nodes
 
     def _normalize_url(self, url, node_name, version):
         """Return package url."""
         if self.link_prefix:
             if version:
-                normalize_url = '{0}/{1}/{2}'.format(self.link_prefix,
-                                                     node_name,
-                                                     version)
+                normalize_url = f'{self.link_prefix}/{node_name}/{version}'
             else:
-                normalize_url = '{0}/{1}'.format(self.link_prefix, node_name)
+                normalize_url = f'{self.link_prefix}/{node_name}'
         elif url:
             normalize_url = url
         else:
@@ -117,114 +99,65 @@ class Graph:
         """Normalize name."""
         return name
 
-    def _get_metadata(self, name):
-        """Get the metadata of package."""
-        data = [req for req in self.chain_data if req.name == name]
-        if len(data) == 1:
-            meta_data = data[0]
-        else:
-            meta_data = Metadata()
-        return meta_data
-
-    def count_depth(self):
-        """Count each depth."""
-        nodes = self.generate_nodes()
-        # pylint: disable=consider-using-set-comprehension
-        return {i: [node.get('depth') for node in nodes].count(i)
-                for i in set([node.get('depth') for node in nodes])}
-
-
-class Metadata:
-    """Metadata object class."""
-
-    version = None
-    url = None
-
 
 class Linkdraw(Graph):
     """Linkdraw object class."""
 
-    def __init__(self, chain_data, link_prefix=None):
+    edge_descr = '->'
+
+    def __init__(self, package, link_prefix=None):
         """Initialize."""
-        super(Linkdraw, self).__init__(chain_data, link_prefix=link_prefix)
-        try:
-            self.descr = "{0} dependencies".format(chain_data[0].name)
-        except IndexError:
-            raise InvalidMetadata("Package broken.")
+        super(Linkdraw, self).__init__(package, link_prefix=link_prefix)
+        self.descr = f'{self.package.name} dependencies'
         self.time = datetime.utcnow().isoformat()
 
-    def generate_edges(self):
+    def __generate_edge_dict(self, source_node, target_node):
+        return dict(source=self._normalize_name(source_node.name),
+                    target=self._normalize_name(target_node.name),
+                    color=color(source_node.depth),
+                    width=self.default_width,
+                    descr=self.edge_descr,
+                    link='')
+
+    def __generate_edges(self, source_node, target_nodes):
         """Generate edges data."""
         edges = []
-        for node in self.chain_data:
-            for target in node.targets:
-                edge = dict(source=self._normalize_name(node.name),
-                            target=self._normalize_name(target.name),
-                            color=color(node.depth),
-                            width=self.default_width,
-                            descr="->",
-                            link="")
+        for target_node in target_nodes:
+            _edge_key = edge_key(source_node, target_node)
+            if _edge_key not in self.check_set:
+                edge = self.__generate_edge_dict(source_node, target_node)
                 if edge not in edges:
                     edges.append(edge)
+                    self.check_set.add(_edge_key)
+                if len(target_node.targets) > 0:
+                    edges += self.__generate_edges(target_node,
+                                                   target_node.targets)
         return edges
 
     def generate_data(self):
         """Generate Linkdraw data."""
+        nodes = self._generate_nodes(self.chain_data)
+        self.check_set.clear()
+        lines = self.__generate_edges(self.chain_data[0],
+                                      self.chain_data[0].targets)
+        self.check_set.clear()
         return dict(time=self.time,
                     descr=self.descr,
-                    nodes=self.generate_nodes(),
-                    lines=self.generate_edges())
+                    nodes=nodes,
+                    lines=lines)
 
     @staticmethod
     def _normalize_name(name):
         """Normalize name."""
         return name.replace('[', '____').replace(']', '')
 
-    def disable_descr(self):
-        """Disable description."""
-        self.descr = None
-
-    def disable_time(self):
-        """Disable time."""
-        self.time = None
-
-    def generate_position(self):
-        """Generate position.
-
-        level 0 is the base depth, that is one only.
-
-        Nodes depth images is follows.::
-
-            0---1---2---3
-            |    `--2---3---4---5
-            |     `-2---3
-            |        `--3---4
-            1---2---3
-                 `--3
-
-        base position
-            0
-        level distance
-            the value that the smaller of the SVG width and height
-            devided by the ``depth level``.
-        node distance
-            the circumference drawed by the same level nodes
-            devided by the ``num same level``.
-        depth level
-            ``len(self.count_depth().key())``
-        deepest level
-            ``self.count_depth().keys()[-1]``
-        num same level
-            ``self.count_depth().get(int:'some level')``
-        """
-
 
 class Networkx(Graph):
     """Networkx object class."""
 
-    def __init__(self, chain_data, link_prefix=None):
+    def __init__(self, package, link_prefix=None):
         """Initialize."""
-        super(Networkx, self).__init__(chain_data, link_prefix=link_prefix)
+        super(Networkx, self).__init__(package, link_prefix=link_prefix)
         self.graph = networkx.DiGraph()
 
     def generate_edges(self):
@@ -237,7 +170,7 @@ class Networkx(Graph):
 
     def generate_data(self):
         """Generate networkx graph data."""
-        for node in self.generate_nodes():
+        for node in self._generate_nodes(self.chain_data):
             self.graph.add_node(node['name'],
                                 version=node['version'],
                                 link=self._normalize_url(node['link'],

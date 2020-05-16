@@ -14,7 +14,7 @@ def backend(**kwargs):
     :rtype: :class:`py_deps.cache.Container`
     :return: Pickle object or Memcached object.
 
-    :param **kwargs: parameters
+    :param kwargs: parameters
 
     servers
         Memcached servers (required in Memcached)

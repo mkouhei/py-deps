@@ -65,17 +65,20 @@ classifiers = [
 
 
 long_description = (
-    read_content("README.rst") +
-    read_content(os.path.join("docs/source", "HISTORY.rst")))
+    read_content("README.rst") + read_content(
+        os.path.join("docs/source", "HISTORY.rst")
+    )
+)
 
-requires = ['setuptools==41.0.0',
-            'pip==9.0.3',
-            'wheel==0.31.1',
-            'networkx==2.2']
+requires = ['setuptools>=46.1',
+            'pip>=20.0',
+            'wheel>=0.34.0',
+            'networkx==2.4']
 extras_require = {
     'reST': ['Sphinx'],
-    'memcache': ['pylibmc'],
-    }
+    'memcache': ['pylibmc']
+}
+
 if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
@@ -83,6 +86,7 @@ setup(name='py-deps',
       version='0.5.5',
       description='parsing the Python deps and generating graph data',
       long_description=long_description,
+      long_description_content_type='text/x-rst',
       author='Kouhei Maeda',
       author_email='mkouhei@palmtb.net',
       url='https://github.com/mkouhei/py-deps',

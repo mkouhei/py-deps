@@ -3,8 +3,10 @@
 rootdir=$(git rev-parse --show-toplevel)
 (
     cd $rootdir
-    rm -rf dist .cache *.egg-info _build py-deps.tests
+    rm -rf dist .cache *.egg-info _build py-deps/tests
     find ./ -name '*.pyc' -delete
     tox
-    python setup.py check -r
+    python setup.py sdist
+    twine check dist/*
+    which rst2html5.py && python setup.py --long-description | rst2html5.py > /dev/null
 )

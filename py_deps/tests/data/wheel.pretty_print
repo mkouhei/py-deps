@@ -1,4 +1,0 @@
-py-deps -> [Sphinx, setuptools, pip, wheel, tox]
-setuptools -> [certifi, wincertstore, setuptools[ssl], pytest]
-pip -> [pytest, virtualenv, scripttest, mock, pytest, virtualenv, scripttest, mock]
-wheel -> [ed25519ll, keyring, argparse, pyxdg, jsonschema, pytest, coverage, pytest-cov]
