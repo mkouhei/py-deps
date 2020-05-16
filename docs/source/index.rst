@@ -14,7 +14,6 @@ Contents:
    README
    basic-usage
    modules/index
-   design-notes           
 
 .. toctree::
    :maxdepth: 1
