@@ -83,9 +83,9 @@ py-deps retrieve latest version from PyPI
 without ``version`` argument as above.
 Specify version use version argument.::
 
-    >>> pkg = Package('py-deps', version='0.3.0')
+    >>> pkg = Package('py-deps', version='0.5.5')
     >>> pkg.version
-    0.3.0
+    0.5.5
 
 
 Change cache file
@@ -133,12 +133,8 @@ Pretty print
 ::
 
     >>> print(pkg.draw())
-    py-deps -> [Sphinx, setuptools, pip, wheel, tox]
-    setuptools -> [certifi, wincertstore, setuptools[ssl], pytest]
-    pip -> [pytest, virtualenv, scripttest, mock, pytest, virtualenv,
-     scripttest, mock]
-    wheel -> [ed25519ll, keyring, argparse, pyxdg, jsonschema, pytest,
-     coverage, pytest-cov]
+    py-deps -> [networkx, pip, setuptools, wheel]
+    networkx -> [decorator]
     >>>
 
 Linkdraw
@@ -146,88 +142,48 @@ Linkdraw
 
 ::
 
-    >>> import json
-    >>> json.loads(pkg.draw('linkdraw'))
-    {u'descr': u'py-deps dependencies',
-     u'lines': [{u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'py-deps', u'target': u'Sphinx', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'py-deps', u'target': u'setuptools', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'py-deps', u'target': u'pip', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'py-deps', u'target': u'wheel', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'py-deps', u'target': u'tox', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'setuptools', u'target': u'certifi', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'setuptools', u'target': u'wincertstore', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'setuptools', u'target': u'setuptools____ssl',
-       u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'setuptools', u'target': u'pytest', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'pytest', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'virtualenv', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'scripttest', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'mock', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'pytest', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'virtualenv', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'scripttest', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'pip', u'target': u'mock', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'ed25519ll', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'keyring', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'argparse', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'pyxdg', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'jsonschema', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'pytest', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'coverage', u'width': u'1'},
-      {u'color': u'#5F9EA0', u'descr': u'->', u'link': u'',
-       u'source': u'wheel', u'target': u'pytest-cov', u'width': u'1'}],
-     u'nodes': [{u'color': u'', u'link': u'https://github.com/mkouhei/py-deps',
-       u'name': u'py-deps', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'Sphinx', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'https://bitbucket.org/pypa/setuptools',
-       u'name': u'setuptools', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'https://pip.pypa.io/',
-       u'name': u'pip', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'http://bitbucket.org/pypa/wheel/',
-       u'name': u'wheel', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'tox', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'certifi', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'wincertstore',
-       u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'setuptools____ssl',
-       u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'pytest', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'virtualenv', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'scripttest', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'mock', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'ed25519ll', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'keyring', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'argparse', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'pyxdg', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'jsonschema', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'coverage', u'r': u'6'},
-      {u'color': u'#5F9EA0', u'link': u'', u'name': u'pytest-cov',
-       u'r': u'6'}],
-     u'time': u'2015-05-08T03:52:59.542732'}
+    >>> import pprint
+    >>> pp = pprint.PrettyPrinter(width=120)
+    >>> pp.pprint(pkg.draw('linkdraw'))
+    {'descr': 'py-deps dependencies',
+     'lines': [{'color': '#d1e0fa', 'descr': '->', 'link': '', 'source': 'py-deps', 'target': 'networkx', 'width': '1'},
+               {'color': '#a4c1f4', 'descr': '->', 'link': '', 'source': 'networkx', 'target': 'decorator', 'width': '1'},
+               {'color': '#d1e0fa', 'descr': '->', 'link': '', 'source': 'py-deps', 'target': 'pip', 'width': '1'},
+               {'color': '#d1e0fa', 'descr': '->', 'link': '', 'source': 'py-deps', 'target': 'setuptools', 'width': '1'},
+               {'color': '#d1e0fa', 'descr': '->', 'link': '', 'source': 'py-deps', 'target': 'wheel', 'width': '1'}],
+     'nodes': [{'color': '#d1e0fa',
+                'depth': 0,
+                'link': 'https://github.com/mkouhei/py-deps',
+                'name': 'py-deps',
+                'r': '6',
+                'version': '0.5.5'},
+               {'color': '#a4c1f4',
+                'depth': 1,
+                'link': 'http://networkx.github.io/',
+                'name': 'networkx',
+                'r': '6',
+                'version': '2.4'},
+               {'color': '#76a1ef',
+                'depth': 2,
+                'link': 'https://github.com/micheles/decorator',
+                'name': 'decorator',
+                'r': '6',
+                'version': '4.4.2'},
+               {'color': '#a4c1f4', 'depth': 1, 'link': 'https://pip.pypa.io/', 'name': 'pip', 'r': '6', 'version': '20.1'},
+               {'color': '#a4c1f4',
+                'depth': 1,
+                'link': 'https://github.com/pypa/setuptools',
+                'name': 'setuptools',
+                'r': '6',
+                'version': '46.3.1'},
+               {'color': '#a4c1f4',
+                'depth': 1,
+                'link': 'https://github.com/pypa/wheel',
+                'name': 'wheel',
+                'r': '6',
+                'version': '0.34.2'}],
+     'time': '2020-05-16T14:06:52.790139'}
+
 
 
 See also `How to use linkdraw
@@ -251,16 +207,16 @@ The file name is ``py-deps.pickle`` in default.
 
 Listing cached data with the ``list_data`` method of :class:`Container`.::
 
-    >>> from py_deps import Container
-    >>> Container().list_data()
-    {'py-deps': [py-deps, setuptools, pip, wheel, networkx, decorator],
+    >>> from py_deps.cache import backend
+    >>> backend().list_data()
+    {('py-deps', '0.5.5'): [py-deps]}
      (snip)}
 
 Read the cached package with ``read_data`` method of :class:`Container`.
 This method returns :class:`Package.traced_chain`.
 
-    >>> Container().read_data(('py-deps', '0.3.0'))
-    [py-deps, setuptools, pip, wheel, networkx, decorator]
+    >>> Container().read_data(('py-deps', '0.5.5'))
+    [py-deps]
 
 
 """

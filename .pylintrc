@@ -11,4 +11,5 @@ disable=
     unused-argument,
     no-value-for-parameter,
     wrong-import-order,
-    ungrouped-imports
+    ungrouped-imports,
+    line-too-long
