@@ -1,6 +1,11 @@
 History
 =======
 
+1.0.1 (2020-09-19)
+------------------
+
+* Fixes raise-missing-from, super-with-arguments pylint violations.
+
 1.0.0 (2020-05-16)
 ------------------
 
