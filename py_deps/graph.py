@@ -107,7 +107,7 @@ class Linkdraw(Graph):
 
     def __init__(self, package, link_prefix=None):
         """Initialize."""
-        super(Linkdraw, self).__init__(package, link_prefix=link_prefix)
+        super().__init__(package, link_prefix=link_prefix)
         self.descr = f'{self.package.name} dependencies'
         self.time = datetime.utcnow().isoformat()
 
@@ -157,7 +157,7 @@ class Networkx(Graph):
 
     def __init__(self, package, link_prefix=None):
         """Initialize."""
-        super(Networkx, self).__init__(package, link_prefix=link_prefix)
+        super().__init__(package, link_prefix=link_prefix)
         self.graph = networkx.DiGraph()
 
     def generate_edges(self):

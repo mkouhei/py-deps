@@ -81,7 +81,7 @@ class Pickle(Container):
         """Initialize."""
         if cache_name is None:
             cache_name = self.default_cache_name
-        super(Pickle, self).__init__(cache_name)
+        super().__init__(cache_name)
         self.load_cache()
 
     def load_cache(self):
@@ -113,7 +113,7 @@ class Memcached(Container):
                  password=None,
                  behaviors=None):
         """Initialize."""
-        super(Memcached, self).__init__()
+        super().__init__()
         if username and password:
             self.container = pylibmc.Client(servers,
                                             binary=True,
