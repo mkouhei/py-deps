@@ -79,7 +79,7 @@ if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
 setup(name='py-deps',
-      version='1.0.0',
+      version='1.0.1',
       description='parsing the Python deps and generating graph data',
       long_description=long_description,
       long_description_content_type='text/x-rst',
