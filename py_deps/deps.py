@@ -45,7 +45,7 @@ def search(pkg_name, exactly=False):
     except (TimeoutError,
             ConnectionRefusedError,
             xmlrpclib.ProtocolError) as exc:
-        raise BackendFailure(exc)
+        raise BackendFailure(exc) from exc
     if exactly:
         result = [pkg for pkg in result
                   if u2h(pkg.get('name')) == u2h(pkg_name)]
@@ -67,7 +67,7 @@ def latest_version(pkg_name):
     except (TimeoutError,
             ConnectionRefusedError,
             xmlrpclib.ProtocolError) as exc:
-        raise BackendFailure(exc)
+        raise BackendFailure(exc) from exc
     if package_releases:
         result = package_releases[0]
     else:
